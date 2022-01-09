@@ -7,7 +7,7 @@ disqusShortname: ''
 googleAnalytics: ''
 Author:
   avatar: img/avatar.png
-  bio: John Yuill is passionate about using data and analytics.
+  bio: I'm passionate about using data and analytics to understand the world better, improve decision-making, and more effectively achieve goals.
   name: John Yuill
 Params:
   authorbox: yes
@@ -33,3 +33,8 @@ Params:
   widgets:
     recent_num: 5
     tags_counter: no
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true

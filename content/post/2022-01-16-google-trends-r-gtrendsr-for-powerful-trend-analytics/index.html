@@ -1,0 +1,332 @@
+---
+title: 'Google Trends + R: gtrendsR for Powerful Trend Analytics'
+author: John Yuill
+date: '2022-01-16'
+categories:
+  - R
+tags:
+  - google trends
+  - gtrendsR
+  - dataviz
+thumbnail: img/search-interest-over-time-1.png
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p><a href="https://trends.google.com/trends/">Google Trends</a> is a popular tool for all manner of curiousity related to trends in search activity on the Google search engine:</p>
+<ul>
+<li>what topics are trending?</li>
+<li>what are trends for a given search term?</li>
+<li>how does this compare to other terms?</li>
+<li>what related terms are people using?</li>
+<li>how does interest vary by region?</li>
+</ul>
+<p>And lots more.</p>
+<p>Google Trends has recently passed its 15th birthday, prompting a Google blog post on <a href="https://blog.google/products/search/15-tips-getting-most-out-google-trends/">“15 Tips for Getting the Most Out of Google Trends”</a>. One thing they noted right at the start is that they used Google Trends to identify search queries related to Google Trends in order to prioritize content for a blog post. This is a classic use case - <strong>using Google Trends to fuel content decisions for your marketing</strong>.</p>
+<p>An important point is that Google Trends does not represent or translate to an <em>actual</em> number of searches. This search interest presented is <strong>indexed between 0 and 100</strong>, where <strong>100 indicates the peak search interest during the particular date range</strong> reported on. Everything is <em>relative</em> in Google Trends.</p>
+<div id="going-beyond-the-interface" class="section level2">
+<h2>Going Beyond the Interface</h2>
+<div class="figure">
+<img src="images/google-trends-interface-interest-crypto.png" alt="" />
+<p class="caption">Google Trends Interface</p>
+</div>
+<p>Google Trends is a convenient, intuitive interface packed with info that can be great for playing around with, but comes with limitations for tracking trends over time, sharing with others, analyzing more deeply. You can <strong>export</strong> to a spreadsheet, but this comes with inefficiencies as well: you have to export data for each component in the interface separately and you may lose source information. And if you want to make any adjustments (change date range, geography, category, add terms) you have to go back in there and repeat the process.</p>
+<p><strong>Using R to work with Google Trends</strong> can provide a more efficient solution if you want to:</p>
+<ul>
+<li>quickly <strong>import</strong> Google Trends data into R for further analysis.</li>
+<li>grab <strong>all the modules</strong> from the Google Trends interface at once (interest over time, geo data, related topics, related queries).</li>
+<li><strong>repeat</strong> Google Trends reporting to monitor trends over time.</li>
+<li><strong>reproduce</strong> the same Google Trends data in future, based on detailed record of your query.</li>
+<li><strong>integrate</strong> Google Trends reporting with other datasets or reporting structures.</li>
+</ul>
+</div>
+<div id="google-trends-in-r" class="section level2">
+<h2>Google Trends in R</h2>
+<p>Google does not provide an official API for Google Trends but the <a href="https://cran.r-project.org/web/packages/gtrendsR/gtrendsR.pdf"><strong>gtrendsR</strong></a> R package created by Philippe Massicotte is a major helper in the accessing Google Trends data within R for reporting and analysis. Along with all the benefits of using R to process and analyze data, the gtrendsR package provides some big advantages over using the Google Trends Interface:</p>
+<ul>
+<li><strong>Durability</strong>: don’t have to go to the interface and fetch the data each time, you have an on-going reference with source info. You have code that can be referred to, re-used, and shared with others.</li>
+<li><strong>Scalability</strong>: can expand on existing queries, going beyond the limit of 5 that are available in the tool.</li>
+</ul>
+</div>
+<div id="google-trends-parameters" class="section level2">
+<h2>Google Trends Parameters</h2>
+<p>Google Trends has a number of parameters that can be used to fine-tune your search: date ranges, geo data, categories, Google properties. These are <strong>available via the gtrendsR package</strong>, corresponding to the options in the Google Trend online interface. You just have to know how to tap into them:</p>
+<ul>
+<li><strong>Dates</strong>:
+<ul>
+<li>“now 1-H”: last hour - by MINUTE</li>
+<li>“now 4-H”: last 4 hrs - by MINUTE</li>
+<li>“now 1-d”: last day - every 8 MINUTES</li>
+<li>“now 7-d”: last 7 days - HOURLY data</li>
+<li>“today 1-m”: last 30 days - DAILY data</li>
+<li>“today 3-m”: last 90 days - DAILY data</li>
+<li>“today 12-m”: last 12 months - WEEKLY data</li>
+<li>“today+5-y”: last 5 yrs (default) - WEEKLY data</li>
+<li>“all” since beginning of Google Trends 2004</li>
+<li>“YYYY-MM-DD YYYY-MM-DD”: custom start / end date - granularity will depend on time spans above
+<br /><br />
+</li>
+</ul></li>
+<li><strong>Geo</strong>:
+<ul>
+<li>use gtrendsR::<strong>countries</strong> to see complete list</li>
+<li>close to 110,000 options, including country / state / city</li>
+<li>code below shows how to filter for countries</li>
+<li><strong>geo=""</strong> for all countries
+<br /><br />
+</li>
+</ul></li>
+<li><strong>Categories</strong>:
+<ul>
+<li>use gtrendsR::<strong>categories</strong></li>
+<li>over 1,400 categories, with ids that are used in the query</li>
+<li><strong>category = 0</strong> for all categories
+<br /><br />
+</li>
+</ul></li>
+<li><strong>Google properties</strong>:
+<ul>
+<li>specify one or more of ‘web’, ‘news’, ‘images’, ‘froogle’, ‘youtube’</li>
+<li>gprop=c(“web”, “youtube”) as example for web and youtube search</li>
+</ul></li>
+</ul>
+</div>
+<div id="setup---libraries" class="section level2">
+<h2>Setup - Libraries</h2>
+<p>There’s basically no setup required - no credentials, etc. Only need to load the gtrendsR package. <em>(I’ve pre-loaded other packages I’m using for general purpose, such as ‘tidyverse’, etc.)</em></p>
+<pre class="r"><code>library(gtrendsR) ## package for accessing Google Trends - all you need to get going!</code></pre>
+</div>
+<div id="single-term-query" class="section level2">
+<h2>Single term query</h2>
+<p>Using the gtrendsR package to get Google Trends for a single search term.</p>
+<pre class="r"><code>## basic search
+gt_results &lt;- gtrends(keyword=&#39;cryptocurrency&#39;,
+        geo=&quot;&quot;,
+        time=&quot;now 7-d&quot;,
+        gprop=c(&quot;web&quot;),
+        category=0)</code></pre>
+<p>The query returns a bundle of 7 data frames with different info, reflecting what is shown in the Google Trends interface:</p>
+<pre class="r"><code>names(gt_results)</code></pre>
+<pre><code>## [1] &quot;interest_over_time&quot;  &quot;interest_by_country&quot; &quot;interest_by_region&quot; 
+## [4] &quot;interest_by_dma&quot;     &quot;interest_by_city&quot;    &quot;related_topics&quot;     
+## [7] &quot;related_queries&quot;</code></pre>
+<p>(see screenshot of Google Trends interface for comparison)</p>
+<div id="interest-over-time" class="section level3">
+<h3>Interest over time</h3>
+<p>The <strong>‘interest_over_time’</strong> data frame is the main data object, with relative search volume for the selected search term, country, period, property, and category.</p>
+<pre class="r"><code>chart_title &lt;- &quot;Searches for: cryptocurrency&quot;
+sub_title &lt;- &quot;Period: past 7 days; Geo: world; Prop: &#39;web&#39;; Category: all&quot;
+
+## create chart based on search interest over time
+gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+geom_line()+
+  labs(title=chart_title, subtitle=sub_title, x=&quot;&quot;, y=&quot;&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/search-interest-over-time-1.png" width="864" /></p>
+</div>
+<div id="related-topics" class="section level3">
+<h3>Related Topics</h3>
+<p>The ‘related_topics’ data frame holds data on queries related to the main search term (‘cryptocurrency’ in this case).</p>
+<pre class="r"><code>str(gt_results$related_topics)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    34 obs. of  5 variables:
+##  $ subject       : chr  &quot;100&quot; &quot;13&quot; &quot;8&quot; &quot;5&quot; ...
+##  $ related_topics: chr  &quot;top&quot; &quot;top&quot; &quot;top&quot; &quot;top&quot; ...
+##  $ value         : chr  &quot;Cryptocurrency&quot; &quot;Bitcoin&quot; &quot;Investment&quot; &quot;Cryptocurrency exchange&quot; ...
+##  $ keyword       : chr  &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; ...
+##  $ category      : int  0 0 0 0 0 0 0 0 0 0 ...
+##  - attr(*, &quot;reshapeLong&quot;)=List of 4
+##   ..$ varying:List of 1
+##   .. ..$ value: chr &quot;top&quot;
+##   .. ..- attr(*, &quot;v.names&quot;)= chr &quot;value&quot;
+##   .. ..- attr(*, &quot;times&quot;)= chr &quot;top&quot;
+##   ..$ v.names: chr &quot;value&quot;
+##   ..$ idvar  : chr &quot;id&quot;
+##   ..$ timevar: chr &quot;related_topics&quot;</code></pre>
+<ul>
+<li><strong>subject</strong>: relative value to main search term</li>
+<li><strong>related_topics</strong>: contains ‘top’ topics and ‘rising’ topics</li>
+<li><strong>value</strong>: related topic</li>
+<li><strong>keyword</strong>: main search term</li>
+<li><strong>category</strong>: search term category, if applicable</li>
+</ul>
+<pre class="r"><code>  chart_title &lt;- &quot;crytopcurrency: related topics&quot;
+  ## 
+  top &lt;- gt_results$related_topics %&gt;% filter(related_topics==&#39;top&#39; &amp; !is.na(subject) &amp;
+                                                subject!=&#39;&lt;1&#39;)
+  ## convert value to factor and subject to numeric
+  top$value &lt;- as.factor(top$value)
+  top$subject &lt;- as.numeric(top$subject)
+  ## PLOT related topics
+  top %&gt;% ggplot(aes(x=reorder(value, subject), y=subject))+geom_col()+
+  coord_flip()+
+    scale_y_continuous(expand=expansion(add=c(0,10)))+
+    labs(title=chart_title, y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/related-topics-1.png" width="864" /></p>
+</div>
+<div id="related-queries" class="section level3">
+<h3>Related Queries</h3>
+<p>Related Queries module has similar structure to Related Topics:</p>
+<pre class="r"><code>str(gt_results$related_queries)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    50 obs. of  5 variables:
+##  $ subject        : chr  &quot;100&quot; &quot;79&quot; &quot;79&quot; &quot;79&quot; ...
+##  $ related_queries: chr  &quot;top&quot; &quot;top&quot; &quot;top&quot; &quot;top&quot; ...
+##  $ value          : chr  &quot;cryptocurrency price&quot; &quot;bitcoin&quot; &quot;bitcoin cryptocurrency&quot; &quot;crypto&quot; ...
+##  $ keyword        : chr  &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; ...
+##  $ category       : int  0 0 0 0 0 0 0 0 0 0 ...
+##  - attr(*, &quot;reshapeLong&quot;)=List of 4
+##   ..$ varying:List of 1
+##   .. ..$ value: chr &quot;top&quot;
+##   .. ..- attr(*, &quot;v.names&quot;)= chr &quot;value&quot;
+##   .. ..- attr(*, &quot;times&quot;)= chr &quot;top&quot;
+##   ..$ v.names: chr &quot;value&quot;
+##   ..$ idvar  : chr &quot;id&quot;
+##   ..$ timevar: chr &quot;related_queries&quot;</code></pre>
+<pre class="r"><code>  chart_title &lt;- &quot;crytopcurrency: related queries&quot;
+  ## 
+  top &lt;- gt_results$related_queries %&gt;% filter(related_queries==&#39;top&#39; &amp; !is.na(subject) &amp;
+                                                subject!=&#39;&lt;1&#39;)
+  ## convert value to factor and subject to numeric
+  top$value &lt;- as.factor(top$value)
+  top$subject &lt;- as.numeric(top$subject)
+  ## PLOT related topics
+  top %&gt;% ggplot(aes(x=reorder(value, subject), y=subject))+geom_col()+
+  coord_flip()+
+    scale_y_continuous(expand=expansion(add=c(0,10)))+
+    labs(title=chart_title, y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/related-queries-1.png" width="864" /></p>
+<p>You can see right there the possibilities for content marketing: if you’re a crypto currency blogger, for example, you may want to write about how to identify the ‘best cryptocurrency’, etc.</p>
+</div>
+</div>
+<div id="multi-term-query" class="section level2">
+<h2>Multi-Term Query</h2>
+<p>The same approach used to query for single terms can be extended to multiple terms. The example below shows how to load up a collection of terms, as well as leveraging other variables for the query.</p>
+<pre class="r"><code>## create list of multiple search terms
+srch_term &lt;- c(&quot;cryptocurrency&quot;,
+               &quot;bitcoin&quot;,
+               &quot;ethereum&quot;,
+               &quot;stock market&quot;,
+               &quot;real estate&quot;)
+period &lt;- &quot;today 12-m&quot;
+ctry &lt;- &quot;&quot; ## blank = world; based on world countries ISO code
+prop &lt;- c(&quot;web&quot;)
+cat &lt;- 0 ## 0 = all categories
+
+## user-friendly versions of parameters for use in chart titles or other query descriptions
+ctry_ &lt;- ifelse(ctry==&quot;&quot;,&quot;world&quot;,ctry)
+prop_ &lt;- paste0(prop, collapse=&quot;, &quot;)
+cat_ &lt;- ifelse(cat==0,&quot;all&quot;,cat)
+
+## use gtrendsR to call google trends API
+gt_results &lt;- gtrends(keyword=srch_term,
+        geo=ctry,
+        time=period,
+        gprop=prop,
+        category=cat)</code></pre>
+<p>The gt_results object returned is the same as with single query, just has more values for the ‘keyword’ variable in each data frame.</p>
+<div id="interest-over-time-1" class="section level3">
+<h3>Interest over time</h3>
+<pre class="r"><code>chart_title &lt;- paste0(&quot;Search trends: &quot;, paste(srch_term[1:2], collapse=&quot;, &quot;), &quot; +&quot;)
+sub_title &lt;- paste0(&quot;Period: &quot;, period, &quot;; Geo: &quot;, ctry_, &quot;; Prop: &quot;, prop_, &quot;; Category: &quot;, cat_)
+
+## create chart based on search interest over time
+gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+geom_line()+
+  scale_y_continuous(expand=expansion(add=c(0,0)))+
+  labs(title=chart_title, subtitle=sub_title, x=&quot;&quot;, y=&quot;&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/search-interest-multi-terms-1.png" width="864" /></p>
+<p>As noted, there is the same limitation as the interface of <em>maximum five terms</em> at a time. Of course, one of the beauties of doing thing programmatically is that provides opportunities for combining queries to go beyond five. For that, you need to make sure there is a common term in each queries to calculate the relative values. This is a topic for another blog post.</p>
+</div>
+</div>
+<div id="search-terms-vs-search-topics" class="section level2">
+<h2>Search Terms vs Search ‘Topics’</h2>
+<p>Tip #3 in <a href="https://blog.google/products/search/15-tips-getting-most-out-google-trends/">“15 Tips for Getting the Most Out of Google Trends”</a> mentions the importance of <strong>choosing search ‘topics’ when available</strong> for a given search term.</p>
+<p>Using a topic version of the term has benefits, but also complications for programmatic access:</p>
+<ul>
+<li>you need to go to Google Trends to check if a topic is available (it may also be called something different than ‘topic’, like ‘currency’ for the term ‘Bitcoin’).</li>
+<li>the topic term is an indecipherable code, as circled in the URL in the browser bar above.</li>
+<li>comparisons may be skewed if mixing terms and topics.</li>
+</ul>
+<div class="figure">
+<img src="images/google-trends-search-type-example-full.png" alt="" />
+<p class="caption">Google Trends search type example - full</p>
+</div>
+<p>The best way to handle this situation:</p>
+<ol style="list-style-type: decimal">
+<li>If in doubt, go to Google Trends and determine if there is a topic for your term.</li>
+<li>If you want to use the topic, copy the code from the URL.</li>
+<li>The term is encoded so you can drop it in a <a href="https://www.url-encode-decode.com/">URL decoder</a> OR…just <strong>replace the ‘%2Fm%2F’ with ‘/m/’</strong> and use the rest as is.</li>
+<li>Use this in your query - it will still work with <strong>gtrendsR</strong>…<em>BUT</em>…it <strong>won’t mix with search terms</strong> in the same query. :( You can still do multiple topic terms, even if identified as different topics, but you can’t mix terms and topics.</li>
+</ol>
+<p>So you may have to decide between using the topic version or the basic search term, depending on your needs. As in the example above, both versions <em>tend</em> to trend the same, with the topic having higher volume. No guarantees, though.</p>
+<div id="example-with-topics" class="section level3">
+<h3>Example with topics</h3>
+<div class="figure">
+<img src="images/google-trends-topic-crypto-bitcoin.png" alt="" />
+<p class="caption">Google Trends with topics crypto and bitcoin</p>
+</div>
+<pre class="r"><code>## create list of multiple search terms using topic codes, separated by commas in URL and decoded
+srch_term &lt;- c(&quot;/m/0vpj4_b&quot;,
+               &quot;/m/05p0rrx&quot;)
+
+srch_topic &lt;- c(&quot;Cryptocurrency_topic&quot;,
+                &quot;Bitcoin_currency&quot;)
+
+period &lt;- &quot;today 12-m&quot;
+ctry &lt;- &quot;&quot; ## blank = world; based on world countries ISO code
+prop &lt;- c(&quot;web&quot;)
+cat &lt;- 0 ## 0 = all categories
+
+## user-friendly versions of parameters for use in chart titles or other query descriptions
+ctry_ &lt;- ifelse(ctry==&quot;&quot;,&quot;world&quot;,ctry)
+prop_ &lt;- paste0(prop, collapse=&quot;, &quot;)
+cat_ &lt;- ifelse(cat==0,&quot;all&quot;,cat)
+
+## use gtrendsR to call google trends API
+gt_results &lt;- gtrends(keyword=srch_term,
+        geo=ctry,
+        time=period,
+        gprop=prop,
+        category=cat)
+
+## replace codes with topics
+## - extract interest_over_time data frame
+gt_interest &lt;- gt_results$interest_over_time
+## - replace codes with corresponding terms
+gt_interest &lt;- gt_interest %&gt;% mutate(
+  keyword=ifelse(keyword==srch_term[1],srch_topic[1],
+                 ifelse(keyword==srch_term[2], srch_topic[2],&quot;&quot;))
+)</code></pre>
+<pre class="r"><code>## create chart based on search interest over time
+pint1 &lt;- gt_interest %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+geom_line(size=2)+
+  scale_y_continuous(expand=expansion(add=c(0,0)))+
+  scale_color_manual(values=c(&quot;red&quot;,&quot;blue&quot;))+
+  theme(legend.position = &#39;top&#39;)+
+  labs(x=&quot;&quot;, y=&quot;&quot;)
+
+pint2 &lt;- gt_interest %&gt;% group_by(keyword) %&gt;% summarize(avg_int=mean(hits)) %&gt;%
+  ggplot(aes(x=keyword, y=avg_int, fill=keyword))+geom_col()+
+  scale_y_continuous(limit=c(0,100), expand=expansion(mult=c(0,0.1)))+
+  scale_fill_manual(values=c(&quot;red&quot;,&quot;blue&quot;))+
+  theme(legend.position = &#39;none&#39;,
+        axis.text.x = element_blank())+
+  labs(x=&quot;Average&quot;, y=&quot;&quot;)
+
+grid.arrange(pint2, pint1, nrow=1, widths=c(2,8))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/google-trends-topics-bar-line-1.png" width="960" /></p>
+</div>
+</div>
+<div id="wrap-up-and-additional-references" class="section level2">
+<h2>Wrap-up and Additional References</h2>
+<p>There’s lots more you can do with Google Trends and gtrendsR. I hope to cover some more ideas in future blog posts. In the meantime, hopefully this is a helpful start!</p>
+<div id="references" class="section level3">
+<h3>References</h3>
+<p>Other useful references for working with gtrendsR and Google Trends:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/gtrendsR/gtrendsR.pdf">gtrendsR vignette</a></li>
+<li><a href="https://blog.quiet.ly/industry/exploring-google-trends-explore-function-finding-keywords-queries/" class="uri">https://blog.quiet.ly/industry/exploring-google-trends-explore-function-finding-keywords-queries/</a></li>
+<li><a href="https://blog.google/products/search/15-tips-getting-most-out-google-trends/" class="uri">https://blog.google/products/search/15-tips-getting-most-out-google-trends/</a>
+<ul>
+<li>the more authoritative and recent blog post mentioned above</li>
+</ul></li>
+</ul>
+<p>Happy trending!</p>
+</div>
+</div>

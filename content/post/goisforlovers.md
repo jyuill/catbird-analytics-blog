@@ -11,6 +11,7 @@ tags:
 - development
 thumbnail: img/placeholder.png
 title: (Hu)go Template Primer
+draft: true
 ---
 
 Hugo uses the excellent [Go][] [html/template][gohtmltemplate] library for

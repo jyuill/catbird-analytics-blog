@@ -3,13 +3,13 @@ categories:
 - Development
 - golang
 date: "2014-04-02"
-menu: main
 tags:
 - go
 - golang
 - hugo
 - development
 title: Getting Started with Hugo
+draft: true
 ---
 
 ## Step 1. Install Hugo

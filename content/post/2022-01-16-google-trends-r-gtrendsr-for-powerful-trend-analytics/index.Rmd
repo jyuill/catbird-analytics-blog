@@ -48,16 +48,6 @@ An important point is that Google Trends does not represent or translate to an *
 
 ![Google Trends Interface](images/google-trends-interface-interest-crypto.png)
 
-```{r, echo=FALSE, fig.width=400, caption='google trends interface'}
-## 2 approaches to images:
-## 1. can add this text to body of markdown - less flexible output, harder to size
-# ![Google Trends Interface](images/google-trends-interface-page-crypto.png)
-
-## 2. preferred/recommended: in code (need knitr pkg)
-#include_graphics(here('figure','google-trends-interface-page-crypto.png'))
-#include_graphics(here('img', 'google-trends-interface-page-crypto.png')) ## wrong path
-```
-
 Google Trends is a convenient, intuitive interface packed with info that can be great for playing around with, but comes with limitations for tracking trends over time, sharing with others, analyzing more deeply. You can **export** to a spreadsheet, but this comes with inefficiencies as well: you have to export data for each component in the interface separately and you may lose source information. And if you want to make any adjustments (change date range, geography, category, add terms) you have to go back in there and repeat the process.
 
 **Using R to work with Google Trends** can provide a more efficient solution if you want to:
@@ -259,10 +249,6 @@ Using a topic version of the term has benefits, but also complications for progr
 
 ![Google Trends search type example - full](images/google-trends-search-type-example-full.png)
 
-```{r, echo=FALSE, fig.width=400, caption='google trends search types'}
-#include_graphics(here('figure','google-trends-search-type-example-full.png'))
-```
-
 The best way to handle this situation:
 
 1. If in doubt, go to Google Trends and determine if there is a topic for your term.
@@ -275,10 +261,6 @@ So you may have to decide between using the topic version or the basic search te
 ### Example with topics
 
 ![Google Trends with topics crypto and bitcoin](images/google-trends-topic-crypto-bitcoin.png)
-
-```{r, echo=FALSE, fig.width=400, caption='google trends search topics'}
-#include_graphics(here('figure','google-trends-topic-crypto-bitcoin.png'))
-```
 
 ```{r}
 ## create list of multiple search terms using topic codes, separated by commas in URL and decoded

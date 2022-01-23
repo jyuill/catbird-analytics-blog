@@ -1,14 +1,10 @@
 baseurl: /
 title: Catbird Analytics
 languageCode: en-us
-paginate: '10'
+paginate: '5'
 theme: Mainroad
 disqusShortname: ''
 googleAnalytics: ''
-menu:
-  main:
-    - name: 'Home'
-    - url: '/'
 Author:
   avatar: img/avatar.png
   bio: I'm passionate about using data and analytics to understand the world better, improve decision-making, and more effectively achieve goals.

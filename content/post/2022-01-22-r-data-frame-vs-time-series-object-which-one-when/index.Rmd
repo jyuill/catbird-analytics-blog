@@ -44,4 +44,20 @@ head(ea)
 
 Stock market prices are available in time series form via R quantmod package. As shown above, dates are row numbers rather than a date field as they would be in typical data frame. This has a variety of implications.
 
-### Other
+* types of calculations easily available
+* selecting date ranges
+* aggregating into periods like weekly, monthly, quarterly, annualy
+* charting
+
+```{r}
+## use dygraphs pkg
+#dygraph(OHLC(ea))
+dygraph(ea$EA.Close)
+chart_Series(ea)
+```
+
+
+### Limitations
+
+* multi-dimensional data
+* faceted charts

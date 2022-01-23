@@ -4,6 +4,9 @@
 		<span class="menu__btn-title" tabindex="-1">{{ T "menu_label" }}</span>
 	</button>
 	<ul class="menu__list">
+	  <!-- this <li> added by JY manually to show HOME pg link as first item in menu -->
+	  <li class="menu__item"><a class="menu__link" href="/"><span class="menu__text">HOME</span></a></li>
+	  <!-- end section added by JY -->
 		{{- $currentNode := . }}
 		{{- range .Site.Menus.main }}
 		{{- if .Name }}

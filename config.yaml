@@ -5,6 +5,10 @@ paginate: '10'
 theme: Mainroad
 disqusShortname: ''
 googleAnalytics: ''
+menu:
+  main:
+    - name: 'Home'
+    - url: '/'
 Author:
   avatar: img/avatar.png
   bio: I'm passionate about using data and analytics to understand the world better, improve decision-making, and more effectively achieve goals.
@@ -26,6 +30,7 @@ Params:
     single: right
     widgets:
       - search
+      - social
       - recent
       - categories
       - taglist
@@ -33,6 +38,13 @@ Params:
   widgets:
     recent_num: 5
     tags_counter: no
+    social:
+      github: 'jyuill'
+      linkedin: 'johnyuill'
+      #custom:
+      #  - title: 'Home'
+      #    url: 'index.html'
+        
   style:
     vars:  
       highlightColor: '#2d81e2'  # Override highlight color (orig: '#e22d30')

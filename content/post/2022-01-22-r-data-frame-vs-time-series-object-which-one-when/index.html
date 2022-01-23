@@ -1,0 +1,37 @@
+---
+title: 'R Data Frame vs Time Series Object: Which one when?'
+author: Package Build
+date: '2022-01-22'
+slug: []
+categories:
+  - R
+tags:
+  - dataviz
+description: 'Exploration of data frames vs time series objects in R.'
+thumbnail: ''
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, <strong>time series</strong> objects offer more flexibility and other advantages when analyzing time-based data.</p>
+<p>So when to choose time series rather data frames?</p>
+<div id="time-series-object" class="section level3">
+<h3>Time Series Object</h3>
+<p><strong>xts</strong> is the main R package for working with time series. <strong>Datacamp</strong> has an excellent <a href="http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8">xts Cheat Sheet</a> and very helpful <a href="https://www.datacamp.com/community/blog/r-xts-cheat-sheet">supplementary info.</a></p>
+<p>So I’m just going to hit some highlights with examples here.</p>
+<pre class="r"><code>## use quantmod pkg to get some stock prices as time series
+ea &lt;- getSymbols(Symbols=&#39;EA&#39;, auto.assign=FALSE)
+head(ea)</code></pre>
+<pre><code>##            EA.Open EA.High EA.Low EA.Close EA.Volume EA.Adjusted
+## 2007-01-03    50.8    52.7   49.7     51.0   8206600        50.7
+## 2007-01-04    51.7    54.0   51.5     53.7   7824100        53.3
+## 2007-01-05    53.3    53.6   52.3     53.1   5806900        52.7
+## 2007-01-08    53.2    53.2   52.0     52.9   2693500        52.5
+## 2007-01-09    53.0    53.7   52.4     52.7   2146300        52.4
+## 2007-01-10    52.6    53.9   52.3     53.7   2422700        53.3</code></pre>
+<p>Stock market prices are available in time series form via R quantmod package. As shown above, dates are row numbers rather than a date field as they would be in typical data frame. This has a variety of implications.</p>
+</div>
+<div id="other" class="section level3">
+<h3>Other</h3>
+</div>

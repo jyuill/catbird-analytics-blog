@@ -1,0 +1,47 @@
+---
+title: 'R Data Frame vs Time Series Object: Which one when?'
+author: Package Build
+date: '2022-01-22'
+slug: []
+categories:
+  - R
+tags:
+  - dataviz
+description: 'Exploration of data frames vs time series objects in R.'
+thumbnail: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      fig.height=6,
+                      fig.width=9)
+options(scipen = 99)
+options(digits=3)
+
+library(tidyverse)
+library(xts)
+library(dygraphs)
+library(quantmod)
+```
+
+Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, **time series** objects offer more flexibility and other advantages when analyzing time-based data.
+
+So when to choose time series rather data frames?
+
+### Time Series Object
+
+**xts** is the main R package for working with time series. **Datacamp** has an excellent [xts Cheat Sheet](http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8) and very helpful [supplementary info.](https://www.datacamp.com/community/blog/r-xts-cheat-sheet)  
+
+So I'm just going to hit some highlights with examples here.
+
+```{r}
+## use quantmod pkg to get some stock prices as time series
+ea <- getSymbols(Symbols='EA', auto.assign=FALSE)
+head(ea)
+```
+
+Stock market prices are available in time series form via R quantmod package. As shown above, dates are row numbers rather than a date field as they would be in typical data frame. This has a variety of implications.
+
+### Other

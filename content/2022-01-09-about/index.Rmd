@@ -5,7 +5,9 @@ authorbox: false
 date: '2022-01-09'
 slug: about
 description: about John Yuill
-menu: main
+menu: 
+  main:
+    weight: 2
 ---
 
 But enough about me. ;)

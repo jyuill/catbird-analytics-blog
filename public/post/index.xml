@@ -6,16 +6,28 @@
     <description>Recent content in Posts on Catbird Analytics</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Dec 2020 21:13:14 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2020-12-01-r-rmarkdown/</link>
-      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      <title>R Data Frame vs Time Series Object: Which one when?</title>
+      <link>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</link>
+      <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>/post/2020-12-01-r-rmarkdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.</description>
+      <guid>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</guid>
+      <description>Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, time series objects offer more flexibility and other advantages when analyzing time-based data.
+So when to choose time series rather data frames?
+Time Series Object xts is the main R package for working with time series. Datacamp has an excellent xts Cheat Sheet and very helpful supplementary info.
+So I’m just going to hit some highlights with examples here.</description>
+    </item>
+    
+    <item>
+      <title>Google Trends &#43; R: gtrendsR for Powerful Trend Analytics</title>
+      <link>/post/2022-01-16-google-trends-r-gtrendsr-for-powerful-trend-analytics/</link>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2022-01-16-google-trends-r-gtrendsr-for-powerful-trend-analytics/</guid>
+      <description>Google Trends is a popular tool for all manner of curiousity related to trends in search activity on the Google search engine:
+ what topics are trending? what are trends for a given search term? how does this compare to other terms? what related terms are people using? how does interest vary by region?  And lots more.
+Google Trends has recently passed its 15th birthday, prompting a Google blog post on “15 Tips for Getting the Most Out of Google Trends”.</description>
     </item>
     
   </channel>

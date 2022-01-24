@@ -1,5 +1,5 @@
 ---
-title: 'R Data Frame vs Time Series Object: Which one when?'
+title: 'R Time Series Object vs Data Frames: Strengths and Limitations?'
 author: Package Build
 date: '2022-01-22'
 slug: []
@@ -7,7 +7,7 @@ categories:
   - R
 tags:
   - dataviz
-description: 'Exploration of data frames vs time series objects in R.'
+description: 'Exploration of time series objects strengths and limitations relative to data frames in R.'
 thumbnail: ''
 ---
 
@@ -22,7 +22,7 @@ options(digits=3)
 
 library(tidyverse)
 library(xts)
-#library(dygraphs)
+library(dygraphs)
 library(quantmod)
 library(here)
 library(lubridate)
@@ -59,13 +59,23 @@ str(price)
 
 A data frame structure for comparison, also data based on dates:
 
+#### Convert xts to data frame
+
+Fairly straightforward to convert an xts object to data frame:
+
 ```{r}
-web <- read_csv(here('static/src_data/website-traffic-src.csv'))
-## using glimpse, rather than str, as is the fashion
-glimpse(web)
+price_df <- as.data.frame(price)
+## add Date field based on index (row names) of xts object
+price_df$Date <- index(price)
+## set data frame row names to numbers instead of dates
+rownames(price_df) <- seq(1:nrow(price))
+## reorder columns to put Date first
+price_df <- price_df %>% select(Date, 1:ncol(price_df)-1)
+## check out structure using glimpse, as is the fashion of the times
+glimpse(price_df)
 ```
 
-So the data frame is basically a straight-up table, whereas the xts object has other structural features. This has a variety of implications for working with the data, and some specific benefits in terms of the time aspect. A few of the main ones, at least from my perspective:
+Data frame is basically a straight-up table, whereas the xts object has other structural features. This has a variety of implications for working with the data, and some specific benefits in terms of the time aspect. A few of the main ones, at least from my perspective:
 
 * visualization: a number of visualization options are designed to work with time series. 
 * periodicity: can easily change from granular periods, such as daily, to aggregated periods
@@ -79,20 +89,7 @@ So the data frame is basically a straight-up table, whereas the xts object has o
 
 * charting
 
-
-
-
-
-Let's have a look at the data before going further. 
-
-```{r}
-## use dygraphs pkg
-#dygraph(OHLC(ea))
-dygraph(price$EA.Close)
-chart_Series(price) 
-```
-
-#### Periodicity
+#### Periodicity Manipulation
 
 Change the period granularity to less granular:
 
@@ -118,54 +115,172 @@ The price data covers:
 * `price_ny` years (or *portions* thereof)
 
 ```{r}
-## get first entry
-start(price)
-## get last row
-end(price)
-
+## get earliest date
+st_date <- start(price)
+## get last date
+end_date <- end(price)
 ```
 
+* Start: `r st_date`
+* End: `r end_date`
 
-### Calculations
+#### Selecting/Subsetting
 
-lagged differences
+Time series objects make it easy to slice the data by date ranges. This is an area where time series *really* shine compared to trying to do the same thing with a data frame.
+
+* xts does a good job at interpreting date ranges based on minimal info.
+* '/' is a key symbol for separating dates.
+* date ranges are inclusive of references used.
+
+Note that in the following examples based on stock market data, some dates are missing when markets were closed.
 
 ```{r}
-price_lag_wk <- to.weekly(price)
-price_lag_wk <- price_lag_wk$price.Close
-price_lag_wk11 <- diff(price_lag_wk, lag=1, differences=1)
-price_lag_wk21 <- diff(price_lag_wk, lag=2, differences=1)
+## subset on a YEAR (showing head and tail to confirm data is 2021 only)
+head(price["2021"])
+tail(price["2021"])
+
+## get data DURING selected month
+price["2020-02"]
+
+## get data FROM start of a year to END OF SPECIFIC MONTH
+price_jf <- price["2021/2021-02"]
+head(price_jf, 4)
+tail(price_jf, 3)
+
+## get everything BEFORE specified date (based on what is avaliable)
+price["/2020-01-06"]
+
+## get everything BETWEEN two dates
+price["2021-06-01/2021-06-04"]
+
+## get everything AFTER specified date
+price["2022-01-18/"]
+```
+
+#### Period Calculations
+
+* simple arithmetic between two dates is not as straightforward as might be expected, but still easily doable.
+
+```{r}
+## subtraction of a given metric between two dates
+as.numeric(price$EA.Close["2022-01-21"])-as.numeric(price$EA.Close["2022-01-18"])
+
+## subtraction of one metric from another on same date
+price$EA.Close["2022-01-18"]-price$EA.Open["2022-01-18"]
+```
+
+* lag.xts is versatile for lag calculations.
+
+```{r}
+## default is one period
+head(price-lag.xts(price))
+## set k for longer lag - this example starting at a date beyond the lag, so no NAs
+head(price["2020-01-13/"]-lag.xts(price, k=7))
+
+## works for individual column
+price$EA.Close["2022-01-18/"]-lag.xts(price$EA.Close, k=2)
+```
+
+* diff for calculating differences, based on combination of lag and difference order.
+
+```{r}
+head(diff(price, lag=1, differences=1))
+head(diff(price, lag=1, differences=2))
+```
+
+### Visualization
+
+Time series objects offer some different visualization opportunities than data frames. Below are a couple of options.
+
+#### Plot.ts
+
+You can do a quick, simple plot with plot.ts(). Note that in this case the x-axis is the numerical index of the data point, and doesn't show the date. 
+
+```{r}
+plot.ts(price$EA.Close)
+```
+
+#### Dygraphs
+
+The dygraphs package offers flexibility and interactivity for time series.
+
+* easily show multiple metrics at once.
+* scroll over to see details.
+* select chart area to zoom in.
+
+```{r}
+dygraph(price[,1:4])
 ```
 
 
-#### Creating/Converting to a Time Series Object
+* subset for individual columns.
+* easily add annotations for events.
+
+```{r}
+## use dyEvent to add annotations
+graph <- dygraph(price$EA.Close)
+graph <- dyEvent(graph, "2020-02-21","Start of Covid 19", labelLoc = 'top')
+graph <- dyEvent(graph, "2021-06-10","New product announcements", labelLoc = 'top')
+## print chart
+graph
+```
+
+
+### Creating/Converting to a Time Series Object
+
+#### ts objects
+
+Some objects are identified as 'ts', and may be in a matrix. These can be converted to xts for manipulation.
+
+* monthly air passenger data for 1949 - 1960.
+
+```{r}
+AirPassengers
+```
+
+* use as.xts to convert to xts.
+
+```{r}
+## convert ts to xts
+air_xts <- as.xts(AirPassengers) ## ts object
+## set metric column name
+colnames(air_xts) <- 'passengers'
+head(air_xts)
+```
+
+#### Data frame to xts
+
+```{r}
+## import time-based data in csv file. will import as data frame
+price_df_im <- read_csv(here('static/src_data/price_df.csv'))
+## convert data frame to xts object by specifying the date field to use for xts index.
+price_xts <- xts(price_df_im, order.by=as.Date(price_df_im$Date))
+```
 
 #### Saving
 
 No doubt there are more efficient/proper ways, but what works for me is to convert the time series to a data frame and save as .csv. Can always convert back to xts on import.
 
 ```{r}
-price_df <- as.data.frame(price)
-price_df$Date <- index(price)
-rownames(price_df) <- seq(1:nrow(price))
-price_df <- price_df %>% select(Date, 1:ncol(price_df)-1)
+## create data frame based on xts
+
+## save as csv
 write_csv(price_df, here('static/src_data/price_df.csv'))
 
-price_df_im <- read_csv(here('static/src_data/price_df.csv'))
-price_xts <- xts(price_df_im, order.by=as.Date(price_df_im$Date))
-
-## some objects are identified as 'ts', which may be in a matrix. - can easily be converted to xts
-air_ts <- AirPassengers
-air_xts <- as.xts(air_ts)
-colnames(air_xts) <- 'passengers'
-
+## can re-import csv and convert to xts object as shown above.
 ```
-
 
 ### Forecasting
 
+Time series objects are designed for forecasting exercises.
+
 ### Limitations
 
-* more complicated to save than data frames 
-* multi-dimensional data
-* faceted charts
+Times series objects are obviously a powerful way to work with time-based data. When doing statistical modeling or forecasting with time series, they are the go-to.
+
+There are some cases where you may prefer to stick with data frames:
+
+* **Export/Import**: data frames are easier to work with for importing and exporting. 
+* **Multi-dimensional data**: time series work best when each row represents a distinct time. If you are dealing with multi-dimensional data, especially in tidy format, you may want to stick with data frame.
+* **Visualization preferences**: if you are more comfortable with using ggplot2 (or other visualization tools geared toward data frames) a data frame may be preferable. Or if the document you are producing has ggplot2 charts, you may want to maintain standard presentation.
+* **Forecasting needs**: if you are doing time series forecasting you will want to use a time series object. If you're not doing forecasting, there is less of a need.

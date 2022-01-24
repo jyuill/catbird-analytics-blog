@@ -15,49 +15,147 @@ thumbnail: ''
 knitr::opts_chunk$set(echo = TRUE,
                       message=FALSE,
                       warning=FALSE,
-                      fig.height=6,
-                      fig.width=9)
+                      fig.height=4,
+                      fig.width=8)
 options(scipen = 99)
 options(digits=3)
 
 library(tidyverse)
 library(xts)
-library(dygraphs)
+#library(dygraphs)
 library(quantmod)
+library(here)
+library(lubridate)
 ```
 
 Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, **time series** objects offer more flexibility and other advantages when analyzing time-based data.
 
 So when to choose time series rather data frames?
 
-### Time Series Object
+### Time Series Essentials
 
-**xts** is the main R package for working with time series. **Datacamp** has an excellent [xts Cheat Sheet](http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8) and very helpful [supplementary info.](https://www.datacamp.com/community/blog/r-xts-cheat-sheet)  
+**xts** is the main R package for working with time series. It builds on **zoo**, the original pkg for handling time series in R.   **Datacamp** has an excellent [xts Cheat Sheet](http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8) and very helpful [supplementary info.](https://www.datacamp.com/community/blog/r-xts-cheat-sheet)  
 
 So I'm just going to hit some highlights with examples here.
 
+#### Get a Time Series Object
+
+Some types of data are already identified as being time series. For example, the quantmod package fetches stock market data as time series automatically:
+
 ```{r}
 ## use quantmod pkg to get some stock prices as time series
-ea <- getSymbols(Symbols='EA', auto.assign=FALSE)
-head(ea)
+price <- getSymbols(Symbols='EA', from="2020-01-01", to=Sys.Date(), auto.assign=FALSE)
+head(price)
+
 ```
 
-Stock market prices are available in time series form via R quantmod package. As shown above, dates are row numbers rather than a date field as they would be in typical data frame. This has a variety of implications.
+A key characteristic of time series is that dates are row numbers rather than being in a date column, as they would be in typical data frame. Looking at the structure of the xts object, we can see it is different from a data frame.
+
+```{r}
+str(price)
+```
+
+A data frame structure for comparison, also data based on dates:
+
+```{r}
+web <- read_csv(here('static/src_data/website-traffic-src.csv'))
+## using glimpse, rather than str, as is the fashion
+glimpse(web)
+```
+
+So the data frame is basically a straight-up table, whereas the xts object has other structural features. This has a variety of implications for working with the data, and some specific benefits in terms of the time aspect. A few of the main ones, at least from my perspective:
+
+* visualization: a number of visualization options are designed to work with time series. 
+* periodicity: can easily change from granular periods, such as daily, to aggregated periods
+* period calculations: counting number of periods in the data (months, quarters, years)
+* date range selection/subsetting
+* forecasting
 
 * types of calculations easily available
 * selecting date ranges
-* aggregating into periods like weekly, monthly, quarterly, annualy
+* aggregating into periods like weekly, monthly, quarterly, annually
+
 * charting
+
+
+
+
+
+Let's have a look at the data before going further. 
 
 ```{r}
 ## use dygraphs pkg
 #dygraph(OHLC(ea))
-dygraph(ea$EA.Close)
-chart_Series(ea)
+dygraph(price$EA.Close)
+chart_Series(price) 
+```
+
+#### Periodicity
+
+Change the period granularity to less granular:
+
+```{r}
+head(to.weekly(price))
+head(to.monthly(price))
+head(to.yearly(price))
+```
+
+#### Period Counts
+
+```{r}
+price_nw <- nweeks(price)
+price_nm <- nmonths(price)
+price_ny <- nyears(price)
+```
+
+The price data covers:
+
+* `nrow(price)` days
+* `price_nw` weeks
+* `price_nm` months
+* `price_ny` years (or *portions* thereof)
+
+```{r}
+## get first entry
+start(price)
+## get last row
+end(price)
+
 ```
 
 
+### Calculations
+
+lagged differences
+
+#### Creating/Converting to a Time Series Object
+
+#### Saving
+
+No doubt there are more efficient/proper ways, but what works for me is to convert the time series to a data frame and save as .csv. Can always convert back to xts on import.
+
+```{r}
+price_df <- as.data.frame(price)
+price_df$Date <- index(price)
+rownames(price_df) <- seq(1:nrow(price))
+price_df <- price_df %>% select(Date, 1:ncol(price_df)-1)
+write_csv(price_df, here('static/src_data/price_df.csv'))
+
+price_df_im <- read_csv(here('static/src_data/price_df.csv'))
+price_xts <- xts(price_df_im, order.by=as.Date(price_df_im$Date))
+
+## some objects are identified as 'ts', which may be in a matrix. - can easily be converted to xts
+air_ts <- AirPassengers
+air_xts <- as.xts(air_ts)
+colnames(air_xts) <- 'passengers'
+
+```
+
+
+### Forecasting
+
 ### Limitations
 
+* more complicated to save than data frames 
 * multi-dimensional data
 * faceted charts

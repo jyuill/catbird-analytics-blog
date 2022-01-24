@@ -94,9 +94,9 @@ Data frame is basically a straight-up table, whereas the xts object has other st
 Change the period granularity to less granular:
 
 ```{r}
-head(to.weekly(price))
-head(to.monthly(price))
-head(to.yearly(price))
+head(to.weekly(price)[,1:5])
+head(to.monthly(price)[,1:5])
+head(to.yearly(price)[,1:5])
 ```
 
 #### Period Counts

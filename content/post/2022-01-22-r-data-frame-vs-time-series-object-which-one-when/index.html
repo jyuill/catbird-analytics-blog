@@ -54,7 +54,7 @@ head(price)</code></pre>
 ##   xts Attributes:  
 ## List of 2
 ##  $ src    : chr &quot;yahoo&quot;
-##  $ updated: POSIXct[1:1], format: &quot;2022-01-23 23:13:17&quot;</code></pre>
+##  $ updated: POSIXct[1:1], format: &quot;2022-01-23 23:21:14&quot;</code></pre>
 <p>A data frame structure for comparison, also data based on dates:</p>
 </div>
 <div id="convert-xts-to-data-frame" class="section level4">
@@ -94,45 +94,27 @@ glimpse(price_df)</code></pre>
 <div id="periodicity-manipulation" class="section level4">
 <h4>Periodicity Manipulation</h4>
 <p>Change the period granularity to less granular:</p>
-<pre class="r"><code>head(to.weekly(price))</code></pre>
+<pre class="r"><code>head(to.weekly(price)[,1:5])</code></pre>
 <pre><code>##            price.Open price.High price.Low price.Close price.Volume
 ## 2020-01-03        108        108       105         107      3741300
 ## 2020-01-10        107        110       107         109     10852800
 ## 2020-01-17        109        113       109         113     10221500
 ## 2020-01-24        113        114       112         112      8457000
 ## 2020-01-31        110        113       106         108     18435600
-## 2020-02-07        108        111       104         109     15973600
-##            price.Adjusted
-## 2020-01-03            107
-## 2020-01-10            108
-## 2020-01-17            112
-## 2020-01-24            112
-## 2020-01-31            107
-## 2020-02-07            108</code></pre>
-<pre class="r"><code>head(to.monthly(price))</code></pre>
+## 2020-02-07        108        111       104         109     15973600</code></pre>
+<pre class="r"><code>head(to.monthly(price)[,1:5])</code></pre>
 <pre><code>##          price.Open price.High price.Low price.Close price.Volume
 ## Jan 2020      107.9        114     105.1         108     51708200
 ## Feb 2020      107.9        111      98.6         101     55140000
 ## Mar 2020      101.9        112      85.7         100    116497800
 ## Apr 2020       98.4        119      96.7         114     72981400
 ## May 2020      113.1        123     111.1         123     71400200
-## Jun 2020      123.3        134     113.3         132     64143400
-##          price.Adjusted
-## Jan 2020          107.2
-## Feb 2020          100.7
-## Mar 2020           99.5
-## Apr 2020          113.5
-## May 2020          122.1
-## Jun 2020          131.2</code></pre>
-<pre class="r"><code>head(to.yearly(price))</code></pre>
+## Jun 2020      123.3        134     113.3         132     64143400</code></pre>
+<pre class="r"><code>head(to.yearly(price)[,1:5])</code></pre>
 <pre><code>##            price.Open price.High price.Low price.Close price.Volume
 ## 2020-12-31        108        147      85.7         144    747474600
 ## 2021-12-31        143        150     120.1         132    641690300
-## 2022-01-21        132        143     127.3         139     39703300
-##            price.Adjusted
-## 2020-12-31            143
-## 2021-12-31            132
-## 2022-01-21            139</code></pre>
+## 2022-01-21        132        143     127.3         139     39703300</code></pre>
 </div>
 <div id="period-counts" class="section level4">
 <h4>Period Counts</h4>

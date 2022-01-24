@@ -36,6 +36,8 @@ So when to choose time series rather data frames?
 
 **xts** is the main R package for working with time series. It builds on **zoo**, the original pkg for handling time series in R.   **Datacamp** has an excellent [xts Cheat Sheet](http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8) and very helpful [supplementary info.](https://www.datacamp.com/community/blog/r-xts-cheat-sheet)  
 
+For deeper, more sophisticated dive, the highly valuable - yet free! - ['Little Book of R for Time Series'](https://a-little-book-of-r-for-time-series.readthedocs.io/en/latest/index.html) by Dr. Avril Coghlan is  available online in pdf form. 
+
 So I'm just going to hit some highlights with examples here.
 
 #### Get a Time Series Object
@@ -127,6 +129,14 @@ end(price)
 ### Calculations
 
 lagged differences
+
+```{r}
+price_lag_wk <- to.weekly(price)
+price_lag_wk <- price_lag_wk$price.Close
+price_lag_wk11 <- diff(price_lag_wk, lag=1, differences=1)
+price_lag_wk21 <- diff(price_lag_wk, lag=2, differences=1)
+```
+
 
 #### Creating/Converting to a Time Series Object
 

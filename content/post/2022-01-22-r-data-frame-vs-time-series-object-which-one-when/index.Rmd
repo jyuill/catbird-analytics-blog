@@ -1,14 +1,13 @@
 ---
-title: 'R Time Series Object vs Data Frames: Strengths and Limitations?'
-author: Package Build
+title: 'R Time Series Object vs Data Frames: Strengths and Limitations'
+author: John Yuill
 date: '2022-01-22'
-slug: []
 categories:
   - R
 tags:
   - dataviz
-description: 'Exploration of time series objects strengths and limitations relative to data frames in R.'
-thumbnail: ''
+description: Exploration of time series objects strengths and limitations relative
+  to data frames in R.
 ---
 
 ```{r setup, include=FALSE}
@@ -28,9 +27,9 @@ library(here)
 library(lubridate)
 ```
 
-Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, **time series** objects offer more flexibility and other advantages when analyzing time-based data.
+Data frames are a fundamental building block of data analysis done in R. In some cases, though, **time series** objects offer more flexibility and other advantages when analyzing time-based data. Any data set that is comprised of repeated measurements over time (hourly, daily, monthly, etc) is a good candidate: weekly website visits, monthly sales, daily stock prices, annual GDP, that kind of thing.
 
-So when to choose time series rather data frames?
+So what are these time series advantages? How do we leverage them? What limitations of time series objects are good to be aware of? Read on...
 
 ### Time Series Essentials
 
@@ -42,26 +41,59 @@ So I'm just going to hit some highlights with examples here.
 
 #### Get a Time Series Object
 
+At its most basic, a Time-Series object is a list or sometimes matrix of observations at regular time intervals.
+
+Examples in built-in R data sets include:
+
+* annual Nile river flows
+
+```{r}
+class(Nile)
+str(Nile)
+Nile
+```
+
+* monthly Air Passengers
+
+```{r}
+class(AirPassengers)
+str(AirPassengers)
+AirPassengers
+```
+
+#### Convert ts to xts
+
+Converting to an xts object can often make the data more intuitive to deal with.
+
+```{r}
+Nile_xts <- as.xts(Nile)
+str(Nile_xts)
+head(Nile_xts)
+```
+
+```{r}
+Air_xts <- as.xts(AirPassengers)
+str(Air_xts)
+head(Air_xts)
+```
+
 Some types of data are already identified as being time series. For example, the quantmod package fetches stock market data as time series automatically:
 
 ```{r}
 ## use quantmod pkg to get some stock prices as time series
 price <- getSymbols(Symbols='EA', from="2020-01-01", to=Sys.Date(), auto.assign=FALSE)
 head(price)
-
 ```
 
-A key characteristic of time series is that dates are row numbers rather than being in a date column, as they would be in typical data frame. Looking at the structure of the xts object, we can see it is different from a data frame.
+A key characteristic of time series object is that dates are row numbers rather than being in a date column, as they would be in typical data frame. Looking at the structure of the xts object, we can see it is different from a data frame.
 
 ```{r}
 str(price)
 ```
 
-A data frame structure for comparison, also data based on dates:
-
 #### Convert xts to data frame
 
-Fairly straightforward to convert an xts object to data frame:
+If you want to work with the time series as a data frame, it is fairly straightforward to convert an xts object:
 
 ```{r}
 price_df <- as.data.frame(price)
@@ -75,19 +107,27 @@ price_df <- price_df %>% select(Date, 1:ncol(price_df)-1)
 glimpse(price_df)
 ```
 
-Data frame is basically a straight-up table, whereas the xts object has other structural features. This has a variety of implications for working with the data, and some specific benefits in terms of the time aspect. A few of the main ones, at least from my perspective:
+Data frame is basically a straight-up table, whereas the xts object has other structural features. 
 
-* visualization: a number of visualization options are designed to work with time series. 
-* periodicity: can easily change from granular periods, such as daily, to aggregated periods
-* period calculations: counting number of periods in the data (months, quarters, years)
-* date range selection/subsetting
-* forecasting
+#### Convert data frame to xts
 
-* types of calculations easily available
-* selecting date ranges
-* aggregating into periods like weekly, monthly, quarterly, annually
+```{r}
+## convert data frame to xts object by specifying the date field to use for xts index.
+price_xts <- xts(price_df, order.by=as.Date(price_df_im$Date))
+str(price_xts)
+```
 
-* charting
+Notice, however, that in the process of converting an xts object to data frame and back to xts, the xts Attributes information has been lost.
+
+### Time Series Strengths
+
+The structure of a time series leads a variety of advantages related to time-based analysis. A few of the main ones, at least from my perspective:
+
+* Periodicity: can easily change from granular periods, such as daily, to aggregated periods.
+* Period calculations: counting number of periods in the data (months, quarters, years).
+* Selection/subsetting based on date ranges.
+* Visualization: a number of visualization options are designed to work with time series. 
+* Forecasting: time series objects are designed for applying various forecasting methods like Holt-Winters and ARIMA. This is well beyond the scope of this post, but we'll touch on it briefly.
 
 #### Periodicity Manipulation
 
@@ -95,13 +135,14 @@ Change the period granularity to less granular:
 
 ```{r}
 head(to.weekly(price)[,1:5])
-head(to.monthly(price)[,1:5])
+head(to.monthly(price)[1:4,1:5])
 head(to.yearly(price)[,1:5])
 ```
 
 #### Period Counts
 
 ```{r}
+## get the number of weeks, months, years in the dataset (including partial)
 price_nw <- nweeks(price)
 price_nm <- nmonths(price)
 price_ny <- nyears(price)
@@ -109,10 +150,12 @@ price_ny <- nyears(price)
 
 The price data covers:
 
-* `nrow(price)` days
-* `price_nw` weeks
-* `price_nm` months
-* `price_ny` years (or *portions* thereof)
+* `r nrow(price)` days
+* `r price_nw` weeks
+* `r price_nm` months
+* `r price_ny` years (or *portions* thereof)
+
+First/last dates:
 
 ```{r}
 ## get earliest date
@@ -226,53 +269,18 @@ graph
 ```
 
 
-### Creating/Converting to a Time Series Object
+### Saving/Exporting time series data
 
-#### ts objects
+This seems a bit tricky due to the structural name of time series objects. You can convert an xts object to data frame, export as csv, re-import, convert back to xts, as shown above. But, as we saw then, you can lose the xts Attribute info, which may be valuable. 
 
-Some objects are identified as 'ts', and may be in a matrix. These can be converted to xts for manipulation.
-
-* monthly air passenger data for 1949 - 1960.
-
-```{r}
-AirPassengers
-```
-
-* use as.xts to convert to xts.
-
-```{r}
-## convert ts to xts
-air_xts <- as.xts(AirPassengers) ## ts object
-## set metric column name
-colnames(air_xts) <- 'passengers'
-head(air_xts)
-```
-
-#### Data frame to xts
-
-```{r}
-## import time-based data in csv file. will import as data frame
-price_df_im <- read_csv(here('static/src_data/price_df.csv'))
-## convert data frame to xts object by specifying the date field to use for xts index.
-price_xts <- xts(price_df_im, order.by=as.Date(price_df_im$Date))
-```
-
-#### Saving
-
-No doubt there are more efficient/proper ways, but what works for me is to convert the time series to a data frame and save as .csv. Can always convert back to xts on import.
-
-```{r}
-## create data frame based on xts
-
-## save as csv
-write_csv(price_df, here('static/src_data/price_df.csv'))
-
-## can re-import csv and convert to xts object as shown above.
-```
+I couldn't actually find a good, simple solution.
 
 ### Forecasting
 
 Time series objects are designed for forecasting exercises.
+
+
+
 
 ### Limitations
 
@@ -283,4 +291,4 @@ There are some cases where you may prefer to stick with data frames:
 * **Export/Import**: data frames are easier to work with for importing and exporting. 
 * **Multi-dimensional data**: time series work best when each row represents a distinct time. If you are dealing with multi-dimensional data, especially in tidy format, you may want to stick with data frame.
 * **Visualization preferences**: if you are more comfortable with using ggplot2 (or other visualization tools geared toward data frames) a data frame may be preferable. Or if the document you are producing has ggplot2 charts, you may want to maintain standard presentation.
-* **Forecasting needs**: if you are doing time series forecasting you will want to use a time series object. If you're not doing forecasting, there is less of a need.
+* **Forecasting needs**: if you are doing time series forecasting you will want to use a time series object. If you're not doing forecasting, there is less of a need. Limitation is that time-series forecasting is based only on historical trends in the data and doesn't include things like correlation with other factors.

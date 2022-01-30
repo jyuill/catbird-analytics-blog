@@ -8,15 +8,12 @@
     <language>en-us</language>
     <lastBuildDate>Sat, 22 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>R Data Frame vs Time Series Object: Which one when?</title>
+      <title>R Time Series Object vs Data Frames: Strengths and Limitations</title>
       <link>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</link>
       <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
       
       <guid>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</guid>
-      <description>Data frames are one of the fundamental building blocks of data analysis done in R. In some cases, though, time series objects offer more flexibility and other advantages when analyzing time-based data.
-So when to choose time series rather data frames?
-Time Series Object xts is the main R package for working with time series. Datacamp has an excellent xts Cheat Sheet and very helpful supplementary info.
-So I’m just going to hit some highlights with examples here.</description>
+      <description>As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I’m not interested in learning everything in that universe. I’m interested in learning the shortest paths between where I am now and my objective. As an adherent of the tidyverse, I lean strongly toward solutions in that realm.</description>
     </item>
     
     <item>

@@ -1,16 +1,19 @@
 ---
 title: 'R Time Series Objects vs Data Frames: Advantages and Limitations'
 author: John Yuill
-date: '2022-01-22'
+date: '2022-01-30'
 categories:
   - R
 tags:
   - dataviz
+  - time-series
 description: Exploration of time series objects strengths and limitations relative
   to data frames in R.
+draft: no
 output:
   blogdown::html_page:
     toc: yes
+thumbnail: img/time-series-thumb.png
 ---
 
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
@@ -27,12 +30,13 @@ output:
 <div id="TOC">
 <ul>
 <li><a href="#time-series-essentials">Time Series Essentials</a></li>
-<li><a href="#time-series-use-cases">Time Series Use Cases</a></li>
+<li><a href="#time-series-strengths">Time Series Strengths</a></li>
 <li><a href="#time-series-manipulationcalculation">Time Series Manipulation/Calculation</a></li>
 <li><a href="#visualization">Visualization</a></li>
 <li><a href="#decomposition-plots">Decomposition Plots</a></li>
 <li><a href="#forecasting">Forecasting</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
+<li><a href="#resources">Resources</a></li>
 </ul>
 </div>
 
@@ -43,8 +47,8 @@ output:
 <div id="time-series-essentials" class="section level3">
 <h3>Time Series Essentials</h3>
 <p><strong>ts</strong> is the basic class for time series objects in R. You can do a lot with ts but its functionality have been extend by other packages, in particular <strong>zoo</strong> and more recently <strong>xts</strong>.</p>
-<p><strong>xts</strong> is a leading, evolved R package for working with time series. It builds on <strong>zoo</strong>, an earlier pkg for handling time series in R. <strong>Datacamp</strong> has an excellent <a href="http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8">xts Cheat Sheet</a> and very helpful <a href="https://www.datacamp.com/community/blog/r-xts-cheat-sheet">supplementary info.</a></p>
-<p>So I’m just going to hit some highlights with examples here.</p>
+<p><strong>xts</strong> is a leading, evolved R package for working with time series. It builds on <strong>zoo</strong>, an earlier pkg for handling time series in R. <strong>Datacamp</strong> has a very nice</p>
+<p>So I’m just going to scratch the surface and hit some highlights with examples here.</p>
 <div id="get-a-time-series-object" class="section level4">
 <h4>Get a Time Series Object</h4>
 <p>At its most basic, a time series object is a list or sometimes matrix of observations at regular time intervals.</p>
@@ -170,7 +174,7 @@ class(price)</code></pre>
 ##   xts Attributes:  
 ## List of 2
 ##  $ src    : chr &quot;yahoo&quot;
-##  $ updated: POSIXct[1:1], format: &quot;2022-01-30 12:45:49&quot;</code></pre>
+##  $ updated: POSIXct[1:1], format: &quot;2022-01-30 16:29:21&quot;</code></pre>
 </div>
 <div id="convert-xts-to-data-frame" class="section level4">
 <h4>Convert xts to data frame</h4>
@@ -228,14 +232,14 @@ str(price_rds)</code></pre>
 ##   xts Attributes:  
 ## List of 2
 ##  $ src    : chr &quot;yahoo&quot;
-##  $ updated: POSIXct[1:1], format: &quot;2022-01-30 12:45:49&quot;</code></pre>
+##  $ updated: POSIXct[1:1], format: &quot;2022-01-30 16:29:21&quot;</code></pre>
 <pre class="r"><code>## save as CSV - ensure to include sep=&quot;,&quot;
 write.zoo(price, file=&#39;price.csv&#39;, sep=&quot;,&quot;)
 price_zoo &lt;- read_csv(&#39;price.csv&#39;)</code></pre>
 </div>
 </div>
-<div id="time-series-use-cases" class="section level3">
-<h3>Time Series Use Cases</h3>
+<div id="time-series-strengths" class="section level3">
+<h3>Time Series Strengths</h3>
 <p>The structure of a time series leads a variety of advantages related to time-based analysis, compared to data frames. A few of the main ones, at least from my perspective:</p>
 <ul>
 <li><strong>Period/Frequency Manipulation</strong>: can easily change from granular periods, such as daily, to aggregated periods.</li>
@@ -676,4 +680,15 @@ plot(fcastA)</code></pre>
 </ul>
 <p>Ultimately, the right tool for the job depends on a variety of situational factors, and having a collection of tools at your disposal helps you avoid the ‘when you have is a hammer…’ pitfall. If your data is based on time, time series should be in consideration.</p>
 <p>So that’s quite a lot for one blog post - hopefully helps you make the most of your ‘time’!</p>
+</div>
+<div id="resources" class="section level3">
+<h3>Resources</h3>
+<p>Additional resources that may be helpful with time-series and xts in particular:</p>
+<ul>
+<li><a href="http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8">xts Cheat Sheet</a>.</li>
+<li><a href="https://www.datacamp.com/community/blog/r-xts-cheat-sheet">supplementary info. to cheat sheet</a>.</li>
+<li><a href="https://cran.r-project.org/web/packages/xts/xts.pdf">xts package vignette</a>.</li>
+<li><a href="https://rc2e.com/timeseriesanalysis">time series section in R Cookbook 2nd Edition</a>.</li>
+<li><a href="https://tsibble.tidyverts.org/">tsibble package info.</a> - time series for tidyverse.</li>
+</ul>
 </div>

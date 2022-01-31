@@ -2,12 +2,14 @@
 title: 'Google Trends + R: gtrendsR for Powerful Trend Analytics'
 author: John Yuill
 date: '2022-01-16'
+slug: 'google-trends-r-gtrends-for-power-analytics'
 categories:
   - R
 tags:
+  - dataviz
   - google trends
   - gtrendsR
-  - dataviz
+  - R Markdown
 thumbnail: img/search-interest-over-time-1.png
 ---
 
@@ -127,8 +129,8 @@ gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+
 <h3>Related Topics</h3>
 <p>The ‘related_topics’ data frame holds data on queries related to the main search term (‘cryptocurrency’ in this case).</p>
 <pre class="r"><code>str(gt_results$related_topics)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    34 obs. of  5 variables:
-##  $ subject       : chr  &quot;100&quot; &quot;13&quot; &quot;8&quot; &quot;5&quot; ...
+<pre><code>## &#39;data.frame&#39;:    29 obs. of  5 variables:
+##  $ subject       : chr  &quot;100&quot; &quot;13&quot; &quot;7&quot; &quot;4&quot; ...
 ##  $ related_topics: chr  &quot;top&quot; &quot;top&quot; &quot;top&quot; &quot;top&quot; ...
 ##  $ value         : chr  &quot;Cryptocurrency&quot; &quot;Bitcoin&quot; &quot;Investment&quot; &quot;Cryptocurrency exchange&quot; ...
 ##  $ keyword       : chr  &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; ...
@@ -167,7 +169,7 @@ gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+
 <p>Related Queries module has similar structure to Related Topics:</p>
 <pre class="r"><code>str(gt_results$related_queries)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    50 obs. of  5 variables:
-##  $ subject        : chr  &quot;100&quot; &quot;79&quot; &quot;79&quot; &quot;79&quot; ...
+##  $ subject        : chr  &quot;100&quot; &quot;84&quot; &quot;84&quot; &quot;78&quot; ...
 ##  $ related_queries: chr  &quot;top&quot; &quot;top&quot; &quot;top&quot; &quot;top&quot; ...
 ##  $ value          : chr  &quot;cryptocurrency price&quot; &quot;bitcoin&quot; &quot;bitcoin cryptocurrency&quot; &quot;crypto&quot; ...
 ##  $ keyword        : chr  &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; &quot;cryptocurrency&quot; ...

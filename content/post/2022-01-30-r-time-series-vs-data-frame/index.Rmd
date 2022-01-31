@@ -2,10 +2,12 @@
 title: 'R Time Series Objects vs Data Frames: Advantages and Limitations'
 author: John Yuill
 date: '2022-01-30'
+slug: 'r-time-series-vs-data-frames'
 categories:
   - R
 tags:
   - dataviz
+  - R Markdown
   - time-series
 description: Exploration of time series objects strengths and limitations relative
   to data frames in R.

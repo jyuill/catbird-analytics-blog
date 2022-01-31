@@ -2,12 +2,14 @@
 title: 'Google Trends + R: gtrendsR for Powerful Trend Analytics'
 author: John Yuill
 date: '2022-01-16'
+slug: 'google-trends-r-gtrends-for-power-analytics'
 categories:
   - R
 tags:
+  - dataviz
   - google trends
   - gtrendsR
-  - dataviz
+  - R Markdown
 thumbnail: img/search-interest-over-time-1.png
 ---
 

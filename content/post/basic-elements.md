@@ -7,7 +7,6 @@ description: Example test article that contains basic HTML elements for text for
 tags:
 - HTML
 - CSS
-- Basic Elements
 title: Basic HTML Elements
 draft: true
 ---

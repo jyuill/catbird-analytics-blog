@@ -1,14 +1,7 @@
 ---
 categories:
-- Development
-- golang
 date: "2014-04-02"
 tags:
-- go
-- golang
-- templates
-- themes
-- development
 thumbnail: img/placeholder.png
 title: (Hu)go Template Primer
 draft: true

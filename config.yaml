@@ -4,7 +4,7 @@ languageCode: en-us
 paginate: '5'
 theme: Mainroad
 disqusShortname: ''
-googleAnalytics: 'G-5XF0SHH0KW'
+googleAnalytics: 'UA-219000950-1'
 permalinks:
   /: /:slug/
   posts: /:slug/

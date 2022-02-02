@@ -9,8 +9,6 @@ tags:
   - dataviz
   - R Markdown
   - time-series
-description: Exploration of time series objects strengths and limitations relative
-  to data frames in R.
 draft: no
 output:
   blogdown::html_page:

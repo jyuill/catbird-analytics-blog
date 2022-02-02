@@ -10,4 +10,4 @@ menu:
     weight: 2
 ---
 
-But enough about me. ;)
+Close to 20 years of working with data to improve decision-making, in agency, consulting, and in-house roles. Most recently managing a marketing analytics team at EA in Vancouver, BC.

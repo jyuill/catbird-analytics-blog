@@ -4,7 +4,6 @@ author: John Yuill
 authorbox: false
 date: '2022-01-09'
 slug: about
-description: about John Yuill
 menu: 
   main:
     weight: 2

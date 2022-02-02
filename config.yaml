@@ -1,10 +1,16 @@
-baseurl: /
+baseurl: http://www.catbird-analytics.com
 title: Catbird Analytics
 languageCode: en-us
 paginate: '5'
 theme: Mainroad
 disqusShortname: ''
 googleAnalytics: 'UA-219000950-1'
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _cache$
+  - \.knit\.md$
+  - \.utf8\.md$
 permalinks:
   /: /:slug/
   posts: /:slug/

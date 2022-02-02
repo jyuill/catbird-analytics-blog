@@ -1,0 +1,524 @@
+---
+title: 'R Time Series Objects vs Data Frames: Advantages and Limitations'
+author: John Yuill
+date: '2022-01-30'
+slug: 'r-time-series-vs-data-frames'
+categories:
+  - R
+tags:
+  - dataviz
+  - R Markdown
+  - time-series
+description: Exploration of time series objects strengths and limitations relative
+  to data frames in R.
+draft: no
+output:
+  blogdown::html_page:
+    toc: yes
+thumbnail: img/time-series-thumb.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      fig.height=4,
+                      fig.width=8)
+options(scipen = 99)
+options(digits=3)
+
+library(tidyverse)
+library(xts)
+library(dygraphs)
+library(quantmod)
+library(here)
+library(lubridate)
+library(forecast)
+```
+
+As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I'm not interested in learning *everything* in that universe. I'm interested in learning the shortest paths between where I am now and my objective. As an adherent of the tidyverse, I lean strongly toward solutions in that realm. But, to paraphrase an old saying, 'tidyverse is a playgound...not a jail' and if a problem can be handled better by stepping outside the tidyverse, I'm all for that. 
+
+One of these areas is in dealing with **time series**: data sets comprised of repeated measurements over consistent time intervals (hourly, daily, monthly, etc). You can work with time series data using data frames, the fundamental building block of data analysis in R, but there are more specialized tools that offer more flexibility, specific capabilities and ease of use when analyzing time-based data. This can come into play in a wide variety of situations: weekly website visits, monthly sales, daily stock prices, annual GDP, electricity use by minute, that kind of thing.
+
+So what are these **time series advantages**? How do we leverage them? What limitations of time series objects are good to be aware of? I'm not pretending this is a definitive guide, but I've been looking at this for a while and hear are my observations...
+
+*(A word on forecasting: this is a MAJOR use case for time series but is not the main focus here and I'll only touch on that briefly below.)*
+
+### Time Series Essentials
+
+**ts** is the basic class for time series objects in R. You can do a lot with ts but its functionality have been extend by other packages, in particular **zoo** and more recently **xts**. 
+
+**xts** is a leading, evolved R package for working with time series. It builds on **zoo**, an earlier pkg for handling time series in R. **Datacamp** has a very nice  
+
+So I'm just going to scratch the surface and hit some highlights with examples here.
+
+#### Get a Time Series Object
+
+At its most basic, a time series object is a list or sometimes matrix of observations at regular time intervals.
+
+Examples in built-in R data sets include:
+
+* annual Nile river flows
+
+```{r}
+class(Nile)
+str(Nile)
+Nile
+```
+
+* monthly Air Passengers - yes, I know everybody uses Air Passengers for their time series example. So damn handy. Different examples below, I promise. ;)
+
+```{r}
+class(AirPassengers)
+str(AirPassengers)
+AirPassengers
+```
+
+Both these examples are time series of the **ts** class, and we can see right off that these are different data structures from data frames. A key thing to note about time series is that **date/time is not in a column the way it would be in a data frame, but is in an index** - similar to row.names in a data frame.
+
+If we look at the index for the Nile river data, we can see the time values and we can check the start and end. This info corresponds to the structure info shown above, where **start = 1871**, **end = 1970**, and **frequency = 1**, meaning 1 observation per year, **annual data**.
+
+```{r}
+index(Nile)
+start(Nile)
+end(Nile)
+```
+
+As discussed above, ts is useful, but xts offers additional flexibility and features.
+
+#### Convert ts to xts
+
+Converting to an xts object can often make the data more intuitive to deal with.
+
+```{r}
+library(xts)
+Nile_xts <- as.xts(Nile)
+str(Nile_xts)
+head(Nile_xts)
+```
+
+```{r}
+Air_xts <- as.xts(AirPassengers)
+str(Air_xts)
+head(Air_xts)
+```
+
+* We can see here that xts has reshaped the data from a matrix with rows by year and columns by month to more 'tidy' data with **mth-year as index** and **observations in one column**.
+
+#### Native xts
+
+Some data comes as **xts time series** out of the box. For example, the **quantmod** package fetches stock market data as xts time series automatically:
+
+```{r}
+library(quantmod)
+## use quantmod pkg to get some stock prices as time series
+price <- getSymbols(Symbols='EA', from="2020-01-01", to=Sys.Date(), auto.assign=FALSE)
+class(price)
+head(price)
+```
+
+As noted, a key characteristic of time series object is that **dates are in an index** rather than being in a date column, as they would be in typical data frame. Looking at the structure of the xts object, we can again see it is different from a data frame.
+
+```{r}
+str(price)
+```
+
+#### Convert xts to data frame
+
+If you want to work with the time series as a data frame, it is fairly straightforward to convert an xts object:
+
+```{r}
+price_df <- as.data.frame(price)
+## add Date field based on index (row names) of xts object
+price_df$Date <- index(price)
+## set data frame row names to numbers instead of dates
+rownames(price_df) <- seq(1:nrow(price))
+## reorder columns to put Date first
+price_df <- price_df %>% select(Date, 1:ncol(price_df)-1)
+## check out structure using glimpse, as is the fashion of the times
+glimpse(price_df)
+```
+
+Data frame is basically a straight-up table, whereas the xts object has other structural features. 
+
+#### Convert data frame to xts
+
+```{r}
+## convert data frame to xts object by specifying the date field to use for xts index.
+price_xts <- xts(price_df, order.by=as.Date(price_df$Date))
+str(price_xts)
+```
+
+Notice, however, that in the process of converting an xts object to data frame and back to xts, the xts Attributes information has been lost.
+
+#### Saving/Exporting time series data
+
+Due to the structure of an xts object, the best way to save/export for future use in R and preserve all its attributes is to save as [RDS file](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/readRDS), using **saveRDS**. (additional helpful RDS info [here](https://rstudio-education.github.io/hopr/dataio.html#r-files).)
+
+However, this won't be helpful if you need to share the data with someone who is not using R. You can save as a CSV file using **write.zoo** (be sure to specificy sep=",") and this will maintain the table structure of the data but will drop the attributes. It will automatically move the indexes into an Index column so if someone opens it in Excel/Google Sheets, they will see the dates/times.
+
+Saving as RDS or CSV:
+
+```{r}
+## save as RDS to preserve attributes
+saveRDS(price, file="price.rds")
+price_rds <- readRDS(file='price.rds')
+str(price_rds)
+
+## save as CSV - ensure to include sep=","
+write.zoo(price, file='price.csv', sep=",")
+price_zoo <- read_csv('price.csv')
+```
+
+### Time Series Strengths
+
+The structure of a time series leads a variety of advantages related to time-based analysis, compared to data frames. A few of the main ones, at least from my perspective:
+
+* **Period/Frequency Manipulation**: can easily change from granular periods, such as daily, to aggregated periods.
+* **Period calculations**: counting number of periods in the data (months, quarters, years).
+* **Selection/subsetting** based on date ranges.
+* **Visualization**: a number of visualization options are designed to work with time series. 
+* **Decomposition**: breaking out time series into trend, seasonal, random components for analysis.
+* **Forecasting**: time series objects are designed for applying various forecasting methods like Holt-Winters and ARIMA. This is well beyond the scope of this post, but we'll show a quick ARIMA example.
+
+No doubt everything you can do with time series can be done with data frames, but using a time series object can really expedite things.
+
+### Time Series Manipulation/Calculation
+
+#### Period/Frequency Manipulation
+
+Change the period granularity to less granular:
+
+* easily change daily data to weekly, monthly, quarterly, yearly
+
+```{r}
+## get periodicity (frequency) for data set
+periodicity(price)
+## aggregate by period
+head(to.weekly(price)[,1:5])
+head(to.monthly(price)[,1:5])
+head(to.yearly(price)[,1:5])
+```
+
+Notice that this isn't a straight roll-up but actual summary: for the monthly data, the High is max of daily data for the month, the Low is minimum for the month, while volume is the sum for the month, all as you would expect.  
+
+#### Period Counts
+
+```{r}
+## get the number of weeks, months, years in the dataset (including partial)
+price_nw <- nweeks(price)
+price_nm <- nmonths(price)
+price_ny <- nyears(price)
+```
+
+The price data covers:
+
+* `r nrow(price)` days
+* `r price_nw` weeks
+* `r price_nm` months
+* `r price_ny` years (or *portions* thereof)
+
+First/last dates:
+
+```{r}
+## get earliest date
+st_date <- start(price)
+## get last date
+end_date <- end(price)
+```
+
+* Start: `r st_date`
+* End: `r end_date`
+
+#### Selecting/Subsetting
+
+Time series objects make it easy to slice the data by date ranges. This is an area where time series *really* shine compared to trying to do the same thing with a data frame.
+
+* xts is super-efficient at interpreting date ranges based on minimal info.
+* **'/'** is a key symbol for separating dates - it is your friend.
+* date ranges are inclusive of references used.
+
+Note that in the following examples based on stock market data, dates are missing due to gaps in data - days when markets  closed.
+
+* quickly get **entire YEAR**
+
+```{r}
+## subset on a YEAR (showing head and tail to confirm data is 2021 only)
+head(price["2021"])
+tail(price["2021"])
+```
+
+* **DURING** selected month
+
+```{r}
+## get data DURING selected month
+price["2020-02"]
+```
+
+* **FROM** start of year to **END OF SPECIFIC MONTH**
+
+```{r}
+## get data FROM start of a year to END OF SPECIFIC MONTH
+price_jf <- price["2021/2021-02"]
+head(price_jf, 4)
+tail(price_jf, 3)
+```
+
+* everything **BEFORE** specified date
+
+```{r}
+## get everything BEFORE specified date (based on what is avaliable)
+price["/2020-01-06"]
+```
+
+* everything **BETWEEN** two dates
+
+```{r}
+## get everything BETWEEN two dates
+price["2021-06-01/2021-06-04"]
+```
+
+* everything **AFTER** specified date
+
+```{r}
+## get everything AFTER specified date
+price["2022-01-18/"]
+```
+
+#### Period Calculations
+
+Time series objects lend themselves well to time-based calculations.
+
+Simple arithmetic between two dates is not as straightforward as might be expected, but still easily doable:
+
+```{r}
+## subtraction of a given metric between two dates
+as.numeric(price$EA.Close["2022-01-21"])-as.numeric(price$EA.Close["2022-01-18"])
+
+## subtraction of one metric from another on same date
+price$EA.Close["2022-01-18"]-price$EA.Open["2022-01-18"]
+```
+
+**Lag.xts** is versatile for lag calculations, calculating differences over time:
+
+```{r}
+## calculates across all columns with one command - default is 1 period but can be set with k
+head(price-lag.xts(price))
+## set k for longer lag - this example starting at a date beyond available data for the lag calculations, so no NAs
+head(price["2020-01-13/"]-lag.xts(price, k=7))
+
+## works for individual column
+price$EA.Close["2022-01-18/"]-lag.xts(price$EA.Close, k=2)
+```
+
+**Diff** for calculating differences, based on combination of lag and difference order:
+
+```{r}
+head(diff(price, lag=1, differences=1))
+head(diff(price, lag=1, differences=2))
+```
+
+- first example: diff with lag=1, differences=1 gives same result as lag.xts with k=1 (or default)
+- second example: diff with differences=2 gives the 'second order difference': difference between the differences. 
+    - EA.Open:
+        - 3.73 = 1.37-(-2.36)
+        - 0.68 = 2.05-1.37
+        - -2.87 = -0.82-2.05
+        - ...
+        
+Useful for some forecasting methods, among other applications.
+
+**Returns** for calculating % change period over period:
+
+* functions in **quantmod** package designed for financial asset prices, but can be applied to other xts data.
+* various periodicity: daily, weekly, monthly, quarterly, yearly or ALL at once (allReturn())
+
+```{r}
+head(dailyReturn(price))
+head(monthlyReturn(price))
+```
+
+* applied to Air Passenger xts to get % change, even though not financial returns:
+
+```{r}
+head(monthlyReturn(Air_xts))
+```
+
+### Visualization
+
+Time series objects offer some different visualization opportunities than data frames. Below are a couple of options.
+
+#### Plot.ts
+
+You can do a quick, simple plot with plot.ts(). Note that in this case the x-axis is the numerical index of the data point, and doesn't show the date. 
+
+```{r}
+plot.ts(price$EA.Close)
+```
+
+#### Dygraphs
+
+The **dygraphs package** offers flexibility and **interactivity** for time series.
+
+* easily show multiple metrics at once.
+* **scroll over** to see details.
+* **select chart area** to zoom in.
+
+```{r}
+library(dygraphs)
+dygraph(price[,1:4])
+```
+
+<br />
+
+* subset for individual columns.
+* easily add annotations for events.
+
+```{r}
+## use dyEvent to add annotations
+graph <- dygraph(price$EA.Close)
+graph <- dyEvent(graph, "2020-02-21","Start of Covid 19", labelLoc = 'top')
+graph <- dyEvent(graph, "2021-06-10","New product announcements", labelLoc = 'top')
+## print chart
+graph
+```
+<br />
+
+### Decomposition Plots
+
+Decomposition of a time series enables you to view it broken out into 3 key components (in addition to observed values):
+
+- overall **trend**
+- **seasonality** trending
+- **randomness** trend (noise)
+
+This can make it easier to 'separate the signal from the noise' and get a clearer sense of what is going on.
+
+There has to be data over a long enough period to assess any seasonal trend, so this requires:
+
+- **frequency > 1**, where 1=annual data; typically it would be at least 4 (quarterly), 12 (monthly), 52 (weekly), 365 (daily).
+- **period longer than 2 years**: one year is not enough to establish a seasonal *pattern* over time.
+    - if you get <span style="color:red;">'Error in decomposet(<data>): time series has no or less than 2 periods'</span> it is usually due to violating one or both of the above conditions.
+- need to translate xts object to **ts** for this.
+
+```{r}
+## Air Passengers has enough data
+ap_decomp <- decompose(AirPassengers)
+plot(ap_decomp)
+apx_decomp <- decompose(ts(Air_xts, frequency=12))
+plot(apx_decomp)
+```
+
+- same results with both approaches, although the original ts object maintains dates on x-axis, making it easier to interpret.
+- **interpretation**: steady upward trend; peaks at mid-year; randomness fairly large at first, settles down, then appears to be growing over time.
+- coincides with what we see in the observed data but makes the patterns more evident.
+
+If we fetch some longer daily data for stock price, we can do the same:
+
+```{r}
+## fetch some longer price data
+price_d <- getSymbols('EA', from='2016-01-01', to='2021-12-31', auto.assign = FALSE)
+price_decomp <- decompose(ts(price_d$EA.Close, frequency=365), type="additive")
+plot(price_decomp)
+```
+
+- we provide 6 full years of data and most of that is used to calculated decomposition.
+- x-axis is year number.
+- **TREND**: trending up to about half-way through year 2, then down until about the same point in year 3, then back up, looking like a peak in mid year 4. Not willing to stretch out beyond that. ;)
+- **SEASONAL**: pattern has been detected where tends to be a dip at beginning of year, rising up to a peak toward end of first quarter, dropping sharply, smaller peak mid-year, peak in q3 or early q4, drop with a smaller bump at end of year.
+- **RANDOM**: as to be expected with stock price in general, lots of randomness involved!
+
+Looks like there may be money to be made riding the seasonal wave! Please: **do *not* buy or sell stocks** based on this information. ;)
+
+### Forecasting
+
+A primary use case for time series objects is forecasting. This is a whole other, involved topic way beyond the scope of this post. 
+
+Here is a quick example to show how easy forecasting can be in R. Note that we need to bring in the **forecast** package for this. (There is also the amazing **[tidyverts eco-system]**(https://tidyverts.org/) for working with time series that I have recently discovered - again, a whole other topic for another time.)
+
+#### Get an ARIMA Model
+
+Some basic terms, over-simplified for our purposes here:
+
+* **ARIMA** stands for **A**uto **R**egression **I**ntegrated **M**oving **A**verage
+* One of the most widely-used time series forecasting methods, although certainly not the only.
+* 3 essential parameters for ARIMA are p,d,q: p=periods of lag, d=differencing, q=error of the model. 
+
+```{r}
+library(forecast)
+## get closing prices for forecasting
+price_cl <- price[,4]
+## get a model for the time series - using auto.arima for simplicity
+fitA <- auto.arima(price_cl, seasonal=FALSE) ## can add trace=TRUE to see comparison of different models 
+## show model
+fitA
+```
+
+The model we get back is **ARIMA(0,1,1)** which means p=0, d=1, q=1. We can generate a model by setting these parameters manually, but **auto.arima** automatically checks a variety of models and selects the best. When comparing models, lowest AIC and BIC are preferred.
+
+We can check the accuracy of the model. Most useful item here for interpretation and comparison is MAPE (mean average percent error). In this case, 
+
+```{r}
+## check accuracy - based on historical data
+accuracy(fitA)
+fitAa <- accuracy(fitA)
+100-fitAa[,5]
+```
+
+So in this case a MAPE of `r fitAa[,5]` can be seen as accuracy of `r 100-fitAa[,5]`%.
+
+We can also plot the residuals of the model for visual inspection.
+
+```{r}
+## check residuals
+tsdisplay(residuals(fitA), main='Residuals of Simple ARIMA Forecasting Model for Stock Price')
+```
+
+As usual with residuals, we are looking for mean around 0, roughly evenly distributed. For ARIMA we also get ACF and PACF, where we are looking for bars to be short and at least within blue dotted lines. So looks like we are good to go here.
+
+#### Create A Forecast
+
+We just need a little more code to create and plot forecast. We can set the forecast period for whatever we want, based on the periodicity of the data, in this case days and we are looking out 30 days.
+
+```{r}
+days=30
+fcastA <- forecast(fitA, h=days)
+plot(fcastA)
+```
+
+That was easy! And we can use this approach to quickly iterate over various models, if we are not convinced that auto.arima is the best. Of course you can use data frames to create forecasts of various sorts but the xts object makes it super-easy to apply common time series methods.
+
+This also reveals a shortcoming of times-series forecasting:
+
+* dependence of **pattern recognition** and **pattern repetition**, which can lead to conservative forecast, especially with noisy data.
+* as a result, the forecast is: *'steady as she goes, with possibility of moving either quite a bit higher or quite a bit lower'.* 
+
+So not that useful. To be fair, if stock market prices are not actually predictable, so it is a perfectly reasonable outcome that grounds us in reality. 
+
+### Conclusion
+
+Times series objects are obviously a powerful way to work with time-based data and a go-to when your data is based on time. Particular strengths inculde:
+
+* Ease of **manipulation** such as aggregation by date periods, selecting date ranges, period calculations.
+* Some great **visualization** options for exploring the data.
+* **Forecasting** which is really the bread and butter of time series objects.
+
+There are some cases where you may prefer to stick with data frames:
+
+* **Multi-dimensional data**: time series work best when each row represents a distinct time. If you are dealing with multi-dimensional data where dates are broken down by customer, or region, etc., especially in tidy format, you may want to stick with data frame.
+* **Visualization preferences**: if you are more comfortable with using ggplot2 (or other visualization tools geared toward data frames) a data frame may be preferable. Or if the document you are producing has ggplot2 charts, you may want to maintain standard presentation.
+* **Forecasting needs**: if you are doing time series forecasting you will want to use a time series object. If you're not doing forecasting, there is less of a need. Limitation is that time series forecasting is based only on historical trends in the data and doesn't include things like correlation with other factors.
+
+Ultimately, the right tool for the job depends on a variety of situational factors, and having a collection of tools at your disposal helps you avoid the 'when you have is a hammer...' pitfall. If your data is based on time, time series should be in consideration. 
+
+So that's quite a lot for one blog post - hopefully helps you make the most of your 'time'!
+
+### Resources
+
+Additional resources that may be helpful with time-series and xts in particular:
+
+* [xts Cheat Sheet](http://datacamp-community-prod.s3.amazonaws.com/72771032-0653-4d87-a798-4a83879e99c8). 
+* [supplementary info. to cheat sheet](https://www.datacamp.com/community/blog/r-xts-cheat-sheet). 
+* [xts package vignette](https://cran.r-project.org/web/packages/xts/xts.pdf).
+* [time series section in R Cookbook 2nd Edition](https://rc2e.com/timeseriesanalysis).
+* [tsibble package info.](https://tsibble.tidyverts.org/) - time series for tidyverse.

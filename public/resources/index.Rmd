@@ -3,11 +3,10 @@ title: Resources
 author: Package Build
 date: '2022-01-16'
 slug: resources
-description: 'list of relevant reference resources'
+description: list of relevant reference resources
 menu: 
   main:
     name: Reference
-      weight: 3
 ---
 
 ## Links to some useful resources

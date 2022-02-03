@@ -5,7 +5,7 @@ paginate: '5'
 theme: Mainroad
 disqusShortname: ''
 googleAnalytics: 'UA-219000950-1'
-googleAnalyticsID: 'G-5XF0SHH0KW'
+GoogleAnalyticsID: 'G-5XF0SHH0KW'
 ignoreFiles:
   - \.Rmd$
   - \.Rmarkdown$

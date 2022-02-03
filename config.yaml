@@ -28,8 +28,6 @@ Params:
   post_meta:
     - date
     - categories
-    - description
-    - thumbnail
   readmore: no
   sidebar:
     home: right

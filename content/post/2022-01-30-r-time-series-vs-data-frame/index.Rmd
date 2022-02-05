@@ -350,7 +350,7 @@ Time series objects offer some different visualization opportunities than data f
 
 You can do a quick, simple plot with plot.ts(). Note that in this case the x-axis is the numerical index of the data point, and doesn't show the date. 
 
-```{r}
+```{r ts-plot-01}
 plot.ts(price$EA.Close)
 ```
 
@@ -362,7 +362,7 @@ The **dygraphs package** offers flexibility and **interactivity** for time serie
 * **scroll over** to see details.
 * **select chart area** to zoom in.
 
-```{r}
+```{r dygraph-01}
 library(dygraphs)
 dygraph(price[,1:4])
 ```
@@ -372,7 +372,7 @@ dygraph(price[,1:4])
 * subset for individual columns.
 * easily add annotations for events.
 
-```{r}
+```{r dygraph-02}
 ## use dyEvent to add annotations
 graph <- dygraph(price$EA.Close)
 graph <- dyEvent(graph, "2020-02-21","Start of Covid 19", labelLoc = 'top')
@@ -399,7 +399,7 @@ There has to be data over a long enough period to assess any seasonal trend, so 
     - if you get <span style="color:red;">'Error in decomposet(<data>): time series has no or less than 2 periods'</span> it is usually due to violating one or both of the above conditions.
 - need to translate xts object to **ts** for this.
 
-```{r}
+```{r decomp-plots-01}
 ## Air Passengers has enough data
 ap_decomp <- decompose(AirPassengers)
 plot(ap_decomp)
@@ -413,7 +413,7 @@ plot(apx_decomp)
 
 If we fetch some longer daily data for stock price, we can do the same:
 
-```{r}
+```{r decomp-plots-02}
 ## fetch some longer price data
 price_d <- getSymbols('EA', from='2016-01-01', to='2021-12-31', auto.assign = FALSE)
 price_decomp <- decompose(ts(price_d$EA.Close, frequency=365), type="additive")
@@ -478,7 +478,7 @@ As usual with residuals, we are looking for mean around 0, roughly evenly distri
 
 We just need a little more code to create and plot forecast. We can set the forecast period for whatever we want, based on the periodicity of the data, in this case days and we are looking out 30 days.
 
-```{r}
+```{r forecast-plot-01}
 days=30
 fcastA <- forecast(fitA, h=days)
 plot(fcastA)

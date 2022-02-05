@@ -15,7 +15,7 @@ permalinks:
   /: /:slug/
   posts: /:slug/
 Author:
-  avatar: img/avatar.jpg
+  avatar: img/avatar.png
   bio: I'm passionate about using data and analytics to understand the world better, improve decision-making, and more effectively achieve goals.
   name: John Yuill
 Params:

@@ -8,6 +8,25 @@ menu:
     name: Resources
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      fig.height=6,
+                      fig.width=9)
+options(scipen = 99)
+options(digits=3)
+
+library(knitr) ## for functions like include_graphics
+library(tidyverse)
+library(scales)
+library(here)
+library(quantmod)
+library(dygraphs)
+
+theme_set(theme_minimal())
+```
+
 ## Links to some useful resources
 
 ### R Blogdown
@@ -26,5 +45,5 @@ ea_price <- getSymbols(Symbols='EA', from='2020-01-01', to='2022-02-04', auto.as
 
 ```{r}
 library(dygraphs)
-dygraph(OHLC(ea_price))
+dygraph(OHLC(ea_price), width='100%') 
 ```

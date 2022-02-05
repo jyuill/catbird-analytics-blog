@@ -5,7 +5,6 @@ paginate: '5'
 theme: Mainroad
 disqusShortname: ''
 googleAnalytics: 'UA-219000950-1'
-GoogleAnalyticsID: 'G-5XF0SHH0KW'
 ignoreFiles:
   - \.Rmd$
   - \.Rmarkdown$
@@ -20,6 +19,7 @@ Author:
   bio: I'm passionate about using data and analytics to understand the world better, improve decision-making, and more effectively achieve goals.
   name: John Yuill
 Params:
+  GoogleAnalyticsID: 'G-5XF0SHH0KW'
   authorbox: yes
   description: John Yuill's professional data analytics blog.
   logo:

@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Catbird Analytics</title>
-    <link>/</link>
+    <link>http://www.catbird-analytics.com/</link>
     <description>Recent content on Catbird Analytics</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 22 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://www.catbird-analytics.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>R Time Series Object vs Data Frames: Strengths and Limitations</title>
-      <link>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</link>
-      <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
+      <title>R Time Series Objects vs Data Frames: Advantages and Limitations</title>
+      <link>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</link>
+      <pubDate>Sun, 30 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>/post/2022-01-22-r-data-frame-vs-time-series-object-which-one-when/</guid>
-      <description>As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I’m not interested in learning everything in that universe. I’m interested in learning the shortest paths between where I am now and my objective. As an adherent of the tidyverse, I lean strongly toward solutions in that realm.</description>
+      <guid>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</guid>
+      <description>Time Series Essentials Time Series Strengths Time Series Manipulation/Calculation Visualization Decomposition Plots Forecasting Conclusion Resources   As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I’m not interested in learning everything in that universe. I’m interested in learning the shortest paths between where I am now and my objective.</description>
     </item>
     
     <item>
       <title>Google Trends &#43; R: gtrendsR for Powerful Trend Analytics</title>
-      <link>/post/2022-01-16-google-trends-r-gtrendsr-for-powerful-trend-analytics/</link>
+      <link>http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</link>
       <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>/post/2022-01-16-google-trends-r-gtrendsr-for-powerful-trend-analytics/</guid>
+      <guid>http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</guid>
       <description>Google Trends is a popular tool for all manner of curiousity related to trends in search activity on the Google search engine:
  what topics are trending? what are trends for a given search term? how does this compare to other terms? what related terms are people using? how does interest vary by region?  And lots more.
 Google Trends has recently passed its 15th birthday, prompting a Google blog post on “15 Tips for Getting the Most Out of Google Trends”.</description>
@@ -29,29 +29,20 @@ Google Trends has recently passed its 15th birthday, prompting a Google blog pos
     
     <item>
       <title>Resources</title>
-      <link>/resources/</link>
+      <link>http://www.catbird-analytics.com/resources/</link>
       <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>/resources/</guid>
+      <guid>http://www.catbird-analytics.com/resources/</guid>
       <description>  Links to some useful resources R Blogdown  blogdown: Creating Websites with RMarkdown: online book by Yihui Xie, Amber Thomas, Alison Presmanes Hill. Mainroad Hugo template    </description>
     </item>
     
     <item>
       <title>About Me</title>
-      <link>/about/</link>
+      <link>http://www.catbird-analytics.com/about/</link>
       <pubDate>Sun, 09 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
-      <description>But enough about me. ;)</description>
-    </item>
-    
-    <item>
-      <title>About Me md</title>
-      <link>/about/</link>
-      <pubDate>Mon, 03 Jan 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/about/</guid>
-      <description>Do we need this? Thinking not, so I have removed &amp;lsquo;menu: main&amp;rsquo; from header. Saving for reference.</description>
+      <guid>http://www.catbird-analytics.com/about/</guid>
+      <description>Close to 20 years of working with data to improve decision-making, in agency, consulting, and in-house roles. Most recently managing a marketing analytics team at EA in Vancouver, BC.</description>
     </item>
     
   </channel>

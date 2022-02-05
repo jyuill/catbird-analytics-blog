@@ -5,7 +5,7 @@ date: '2022-01-16'
 slug: resources
 menu: 
   main:
-    name: Reference
+    name: Resources
 ---
 
 ## Links to some useful resources

@@ -20,9 +20,11 @@ menu:
 ### Dygraphs test 
 
 ```{r}
+library(quantmod)
 ea_price <- getSymbols(Symbols='EA', from='2020-01-01', to='2022-02-04', auto.assign = FALSE)
 ```
 
 ```{r}
+library(dygraphs)
 dygraph(OHLC(ea_price))
 ```

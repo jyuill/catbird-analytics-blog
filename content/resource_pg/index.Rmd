@@ -14,3 +14,15 @@ menu:
 
 * [blogdown: Creating Websites with RMarkdown](https://bookdown.org/yihui/blogdown/): online book by Yihui Xie, Amber Thomas, Alison Presmanes Hill.
 * [Mainroad Hugo template](https://themes.gohugo.io/themes/mainroad/)
+
+## Testing Area
+
+### Dygraphs test 
+
+```{r}
+ea_price <- getSymbols(Symbols='EA', from='2020-01-01', to='2022-02-04', auto.assign = FALSE)
+```
+
+```{r}
+dygraph(OHLC(ea_price))
+```

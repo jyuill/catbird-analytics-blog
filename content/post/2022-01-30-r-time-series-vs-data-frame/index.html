@@ -174,7 +174,7 @@ class(price)</code></pre>
 ##   xts Attributes:  
 ## List of 2
 ##  $ src    : chr &quot;yahoo&quot;
-##  $ updated: POSIXct[1:1], format: &quot;2022-02-05 10:35:36&quot;</code></pre>
+##  $ updated: POSIXct[1:1], format: &quot;2022-02-05 12:11:52&quot;</code></pre>
 </div>
 <div id="convert-xts-to-data-frame" class="section level4">
 <h4>Convert xts to data frame</h4>
@@ -232,7 +232,7 @@ str(price_rds)</code></pre>
 ##   xts Attributes:  
 ## List of 2
 ##  $ src    : chr &quot;yahoo&quot;
-##  $ updated: POSIXct[1:1], format: &quot;2022-02-05 10:35:36&quot;</code></pre>
+##  $ updated: POSIXct[1:1], format: &quot;2022-02-05 12:11:52&quot;</code></pre>
 <pre class="r"><code>## save as CSV - ensure to include sep=&quot;,&quot;
 write.zoo(price, file=&#39;price.csv&#39;, sep=&quot;,&quot;)
 price_zoo &lt;- read_csv(&#39;price.csv&#39;)</code></pre>

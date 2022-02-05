@@ -32,7 +32,6 @@ library(quantmod)
 library(here)
 library(lubridate)
 library(forecast)
-library(widgetframe) ## to handle html widgets by putting in iframe
 ```
 
 As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I'm not interested in learning *everything* in that universe. I'm interested in learning the shortest paths between where I am now and my objective. As an adherent of the tidyverse, I lean strongly toward solutions in that realm. But, to paraphrase an old saying, 'tidyverse is a playgound...not a jail' and if a problem can be handled better by stepping outside the tidyverse, I'm all for that. 

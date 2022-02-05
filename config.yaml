@@ -24,7 +24,7 @@ Params:
   description: John Yuill's professional data analytics blog.
   logo:
     subtitle: Digital Analytics from the Catbird Seat
-  favicon: favicon.io ## file in static but doesn't work; use favi in theme static folder
+  favicon: favicon.io ## file in static folder
   opengraph: yes
   pager: yes
   post_meta:

@@ -9,4 +9,12 @@ menu:
     weight: 2
 ---
 
-Close to 20 years of working with data to improve decision-making, in agency, consulting, and in-house roles. Most recently managing a marketing analytics team at EA in Vancouver, BC.
+### Who am I?
+
+I'm John Yuill. I have close to 20 years of working with data to improve decision-making, in agency, consulting, and in-house roles. Most recently managing a marketing analytics team at EA in Vancouver, BC.
+
+### What is Catbird Analytics?
+
+Being a **catbird** is all about operating from the proverbial '**catbird seat**': a vantage point that is far enough above the fray to see the big picture, while being close enough to the action to understand the details, maybe even swoop down to ground level once in a while, then return back to a perch to survey the situation.
+
+And when you combine that with the power of **data & analysis**, you get **Catbird Analytics**.

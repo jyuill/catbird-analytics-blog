@@ -200,6 +200,23 @@ head(to.yearly(price)[,1:5])
 
 Notice that this isn't a straight roll-up but actual summary: for the monthly data, the High is max of daily data for the month, the Low is minimum for the month, while volume is the sum for the month, all as you would expect.  
 
+You can also pull out the values at the **END** of a period-length, including setting number of periods to skip over each iteration:
+
+* get index for last day of period length specified in 'on' for every k period.
+* apply index to dataset to extract the rows.
+
+```{r}
+## every 2 weeks (on='week's, k=2)
+end_wk <- endpoints(price, on="weeks", k=2)
+head(price[end_wk,])
+
+## every 6 months
+end_mth <- endpoints(price, on='months', k=6)
+head(price[end_mth,])
+```
+
+See end of **Period Calculations** section for how to get an average during periods shown: averages for each 6 month period, for example.
+
 #### Period Counts
 
 ```{r}
@@ -342,6 +359,32 @@ head(monthlyReturn(price))
 head(monthlyReturn(Air_xts))
 ```
 
+**Average** for period:
+
+* Using the indexes obtained in the '**endpoints**' example at the end of the **Period/Frequency Manipulation** section above, calculate averages for the periods.
+
+```{r}
+period.apply(price, INDEX=end_mth, FUN=mean)
+```
+
+**Rolling Average**:
+
+You can also calculate a rolling (moving) average quickly with 'rollmean' function from **zoo**:
+
+```{r}
+## get subset of data for demo
+price_c <- price[,'EA.Close']
+price_c <- price_c['/2020-02-28']
+## calc rolling mean and add to original data 
+## - k=3 means 3-period lag
+## - align='right' put calculated number at last date in rolling period
+price_c$EA_CLose_rm <- rollmean(price_c, k=3, align='right')
+
+## quick dygraph - more on this below
+dygraph(price_c, width='100%')
+```
+<br />
+
 ### Visualization
 
 Time series objects offer some different visualization opportunities than data frames. Below are a couple of options.
@@ -364,7 +407,7 @@ The **dygraphs package** offers flexibility and **interactivity** for time serie
 
 ```{r dygraph-01}
 library(dygraphs)
-dygraph(price[,1:4])
+dygraph(price[,1:4], width='100%')
 ```
 
 <br />
@@ -374,7 +417,7 @@ dygraph(price[,1:4])
 
 ```{r dygraph-02}
 ## use dyEvent to add annotations
-graph <- dygraph(price$EA.Close)
+graph <- dygraph(price$EA.Close, width='100%')
 graph <- dyEvent(graph, "2020-02-21","Start of Covid 19", labelLoc = 'top')
 graph <- dyEvent(graph, "2021-06-10","New product announcements", labelLoc = 'top')
 ## print chart

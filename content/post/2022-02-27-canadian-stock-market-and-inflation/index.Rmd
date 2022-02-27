@@ -1,0 +1,74 @@
+---
+title: Canadian Stock Market and Inflation
+author: Package Build
+date: '2022-02-27'
+slug: canadian-stock-market-and-inflation
+categories:
+  - R
+tags:
+  - ''
+description: ''
+thumbnail: ''
+---
+
+Exploration of relationship between inflation and stock market returns in Canada.
+
+```{r setup, includes=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      fig.height=4,
+                      fig.width=8)
+options(scipen = 99)
+options(digits=3)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+```
+
+### Get Data
+
+Data sourced from Statistics Canada:
+
+* Canadian inflation data: [source]
+* Toronto Stock Exchange data: [source]
+
+```{r}
+infl_data <- read_csv(here('data','statscan-inflation-smry-1970.csv'))
+infl_data <- infl_data %>% rename(
+  date=REF_DATE,
+  prod_groups=`Products and product groups`
+)
+tse_data <- read_csv(here('data','tse-1970-relevant-stat.csv'))
+```
+
+Check out data:
+
+* inflation date ranges & categories
+
+```{r}
+summary(infl_data$date)
+infl_data %>% count(prod_groups)
+```
+
+* TSE date ranges & categories
+
+```{r}
+summary(tse_data$date)
+tse_data %>% count(TSE_stat)
+```
+
+Start with highest-level categories
+
+```{r}
+infl_data_main <- infl_data %>% filter(prod_groups=='All-items')
+tse_data_main <- tse_data %>% filter(TSE_stat=='S&P/TSE Composite Index, close')
+
+```
+
+```{r}
+## join data
+infl_tse <- inner_join(infl_data_main, tse_data_main, by='date')
+```
+

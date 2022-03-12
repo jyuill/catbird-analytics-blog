@@ -32,7 +32,7 @@ library(lubridate)
 Data sourced from Statistics Canada:
 
 * Canadian inflation data: [source]
-* Toronto Stock Exchange data: [source]
+* Toronto Stock Exchange data: https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1010012501
 
 ```{r}
 infl_data <- read_csv(here('data','statscan-inflation-smry-1970.csv'))
@@ -63,12 +63,65 @@ Start with highest-level categories
 
 ```{r}
 infl_data_main <- infl_data %>% filter(prod_groups=='All-items')
+infl_data_comb <- infl_data_main %>% select(-GEO, -COORDINATE)
+infl_data_comb <- infl_data_comb %>% rename(
+  item=prod_groups
+)
+
 tse_data_main <- tse_data %>% filter(TSE_stat=='S&P/TSE Composite Index, close')
+tse_data_comb <- tse_data_main %>% select(-COORDINATE, -UOM_ID, -TERMINATED)
+tse_data_comb <- tse_data_comb %>% rename(
+  item=TSE_stat
+) %>% mutate(
+  item=str_replace_all(item, 'S&P/TSE Composite Index, close','TSE Index close')
+)
+
+```
+
+Calc % change for comparison
+
+```{r}
+infl_data_comb_pc <- infl_data_comb %>% mutate(
+  pc_chg=VALUE/lag(VALUE)-1
+)
+tse_data_comb_pc <- tse_data_comb %>% mutate(
+  pc_chg=VALUE/lag(VALUE)-1
+)
+```
+
+
+```{r}
+## join data
+#infl_tse <- inner_join(infl_data_main, tse_data_main, by='date')
+## better to bind rows
+infl_tse <- bind_rows(infl_data_comb_pc, tse_data_comb_pc)
+```
+
+```{r}
+infl_tse %>% ggplot(aes(x=date, y=pc_chg, color=item))+geom_line()
+```
+* Stock returns are MUCH more volatile than inflation rate!
+
+```{r}
+infl_tse_cor <- infl_tse %>% filter(!is.na(pc_chg))
+infl_cor <- infl_tse_cor[infl_tse_cor$item=='All-items',"pc_chg"]
+infl_cor <- infl_cor[-624,]
+tse_cor <- infl_tse_cor[infl_tse_cor$item=='TSE Index close', "pc_chg"]
+cor.test(tse_cor$pc_chg, infl_cor$pc_chg)
+```
+
+
+Probably need to look at longer time horizon to smooth out the volatility.
+
+* compare rolling 12-mth changes
+
+```{r}
+infl_tse_wide <- infl_tse %>% select(-UOM)
+infl_tse_wide <- infl_tse_wide %>% pivot_wider(names_from=item, values_from=VALUE)
 
 ```
 
 ```{r}
-## join data
-infl_tse <- inner_join(infl_data_main, tse_data_main, by='date')
+cor.test(infl_tse_wide$`All-items`, infl_tse_wide$`TSE Index close`)
 ```
 

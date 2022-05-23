@@ -1,0 +1,64 @@
+---
+title: Daily Patterns in Crypto Currency Prices
+author: Package Build
+date: '2022-05-28'
+categories:
+  - crypto currency
+  - R
+  - analysis
+tags:
+  - bitcoin
+  - crypto
+  - dataviz
+  - finance
+slug: daily-patterns-in-crypto-currency-prices
+draft: yes
+description: Analysis of recent Bitcoin price history to see if there are predictable
+  patterns in prices based on day of week that can be leveraged for trading.
+---
+
+```{r setup, include=FALSE}
+## standard settings
+knitr::opts_chunk$set(echo = TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      fig.height=4,
+                      fig.width=8)
+options(scipen = 99)
+options(digits=3)
+
+## load packages
+library(quantmod)
+library(tidyverse)
+library(lubridate)
+library(here)
+library(PerformanceAnalytics)
+library(plotly)
+library(scales)
+library(gridExtra)
+library(DT)
+library(quantmod)
+library(dygraphs)
+library(glue)
+
+## set ggplot theme
+theme_set(theme_classic())
+## chart variables
+fill_color <- 'steelblue3'
+```
+
+```{r data}
+symb <- c('BTC-CAD')
+getSymbols(Symbols=symb, auto.assign = TRUE)
+```
+
+```{r}
+btc <- as.data.frame(`BTC-CAD`)
+btc$date <- row.names(btc)
+```
+
+```{r}
+btc %>% filter(date>'2022-03-01') %>% ggplot(aes(x=date, y=`BTC-CAD.Close`))+geom_line(group=1)
+btc %>% filter(date>'2022-03-01') %>% ggplot(aes(x=date, y=`BTC-CAD.High`))+geom_col()
+```
+

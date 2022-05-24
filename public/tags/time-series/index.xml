@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>time-series on Catbird Analytics</title>
-    <link>http://www.catbird-analytics.com/tags/time-series/</link>
+    <link>https://www.catbird-analytics.com/tags/time-series/</link>
     <description>Recent content in time-series on Catbird Analytics</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://www.catbird-analytics.com/tags/time-series/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.catbird-analytics.com/tags/time-series/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>R Time Series Objects vs Data Frames: Advantages and Limitations</title>
-      <link>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</link>
+      <link>https://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</link>
       <pubDate>Sun, 30 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</guid>
+      <guid>https://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</guid>
       <description>Time Series Essentials Time Series Strengths Time Series Manipulation/Calculation Visualization Decomposition Plots Forecasting Conclusion Resources   As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I’m not interested in learning everything in that universe. I’m interested in learning the shortest paths between where I am now and my objective.</description>
     </item>
     

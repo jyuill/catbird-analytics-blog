@@ -12,7 +12,7 @@
  what topics are trending? what are trends for a given search term? how does this compare to other terms? what related terms are people using? how does interest vary by region?  And lots more.
 Google Trends has recently passed its 15th birthday, prompting a Google blog post on “15 Tips for Getting the Most Out of Google Trends”." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-01-16T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-01-16T00:00:00+00:00" />
 
@@ -83,7 +83,7 @@ if (!doNotTrack) {
 		<li class="menu__item">
 			<a class="menu__link" href="/resources/">
 				
-				<span class="menu__text">Reference</span>
+				<span class="menu__text">Resources</span>
 				
 			</a>
 		</li>
@@ -112,7 +112,7 @@ if (!doNotTrack) {
 		
 	</figure><div class="content post__content clearfix">
 			
-<script src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/header-attrs/header-attrs.js"></script>
+<script src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/header-attrs/header-attrs.js"></script>
 
 
 <p><a href="https://trends.google.com/trends/">Google Trends</a> is a popular tool for all manner of curiousity related to trends in search activity on the Google search engine:</p>
@@ -222,7 +222,7 @@ sub_title &lt;- &quot;Period: past 7 days; Geo: world; Prop: &#39;web&#39;; Cate
 ## create chart based on search interest over time
 gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+geom_line()+
   labs(title=chart_title, subtitle=sub_title, x=&quot;&quot;, y=&quot;&quot;)</code></pre>
-<p><img src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/search-interest-over-time-1.png" width="864" /></p>
+<p><img src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/search-interest-over-time-1.png" width="864" /></p>
 </div>
 <div id="related-topics" class="section level3">
 <h3>Related Topics</h3>
@@ -261,7 +261,7 @@ gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+
   coord_flip()+
     scale_y_continuous(expand=expansion(add=c(0,10)))+
     labs(title=chart_title, y=&#39;&#39;, x=&#39;&#39;)</code></pre>
-<p><img src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/related-topics-1.png" width="864" /></p>
+<p><img src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/related-topics-1.png" width="864" /></p>
 </div>
 <div id="related-queries" class="section level3">
 <h3>Related Queries</h3>
@@ -293,7 +293,7 @@ gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+
   coord_flip()+
     scale_y_continuous(expand=expansion(add=c(0,10)))+
     labs(title=chart_title, y=&#39;&#39;, x=&#39;&#39;)</code></pre>
-<p><img src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/related-queries-1.png" width="864" /></p>
+<p><img src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/related-queries-1.png" width="864" /></p>
 <p>You can see right there the possibilities for content marketing: if you’re a crypto currency blogger, for example, you may want to write about how to identify the ‘best cryptocurrency’, etc.</p>
 </div>
 </div>
@@ -332,7 +332,7 @@ sub_title &lt;- paste0(&quot;Period: &quot;, period, &quot;; Geo: &quot;, ctry_,
 gt_results$interest_over_time %&gt;% ggplot(aes(x=date, y=hits, color=keyword))+geom_line()+
   scale_y_continuous(expand=expansion(add=c(0,0)))+
   labs(title=chart_title, subtitle=sub_title, x=&quot;&quot;, y=&quot;&quot;)</code></pre>
-<p><img src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/search-interest-multi-terms-1.png" width="864" /></p>
+<p><img src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/search-interest-multi-terms-1.png" width="864" /></p>
 <p>As noted, there is the same limitation as the interface of <em>maximum five terms</em> at a time. Of course, one of the beauties of doing thing programmatically is that provides opportunities for combining queries to go beyond five. For that, you need to make sure there is a common term in each queries to calculate the relative values. This is a topic for another blog post.</p>
 </div>
 </div>
@@ -411,7 +411,7 @@ pint2 &lt;- gt_interest %&gt;% group_by(keyword) %&gt;% summarize(avg_int=mean(h
   labs(x=&quot;Average&quot;, y=&quot;&quot;)
 
 grid.arrange(pint2, pint1, nrow=1, widths=c(2,8))</code></pre>
-<p><img src="http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/google-trends-topics-bar-line-1.png" width="960" /></p>
+<p><img src="https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/index_files/figure-html/google-trends-topics-bar-line-1.png" width="960" /></p>
 </div>
 </div>
 <div id="wrap-up-and-additional-references" class="section level2">
@@ -485,7 +485,7 @@ grid.arrange(pint2, pint1, nrow=1, widths=c(2,8))</code></pre>
 			<input class="widget-search__field" type="search" placeholder="SEARCH…" value="" name="q" aria-label="SEARCH…">
 		</label>
 		<input class="widget-search__submit" type="submit" value="Search">
-		<input type="hidden" name="sitesearch" value="http://www.catbird-analytics.com" />
+		<input type="hidden" name="sitesearch" value="https://www.catbird-analytics.com/" />
 	</form>
 </div>
 <div class="widget-social widget">

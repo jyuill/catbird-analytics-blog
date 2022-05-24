@@ -19,11 +19,11 @@ description: Analysis of recent Bitcoin price history to see if there are predic
 
 ```{r setup, include=FALSE}
 ## standard settings
-knitr::opts_chunk$set(echo = TRUE,
+knitr::opts_chunk$set(echo = FALSE,
                       message=FALSE,
                       warning=FALSE,
-                      fig.height=4,
-                      fig.width=8)
+                      fig.height=3.5,
+                      fig.width=6)
 options(scipen = 99)
 options(digits=3)
 
@@ -47,18 +47,94 @@ theme_set(theme_classic())
 fill_color <- 'steelblue3'
 ```
 
-```{r data}
+### Get Data
+
+* Due to long-term volatility and evolution of the market focus on recent years.
+* Go back roughly 2 years from today's date as starting point.
+* Using BTC-CAD because...I'm Canadian.
+
+```{r data, echo=TRUE}
 symb <- c('BTC-CAD')
-getSymbols(Symbols=symb, auto.assign = TRUE)
+date_st <- '2020-05-01'
+## using auto.assign = FALSE and setting object name to avoid issues with default 'BTC-CAD' name
+BTC_CAD <- getSymbols(Symbols=symb, from=date_st, to=Sys.Date()-1, auto.assign = FALSE)
 ```
+
+### Initial Look at Data
+
+```{r, echo=TRUE}
+dygraph(BTC_CAD[,"BTC-CAD.Close"])
+```
+
+### Focus on Recent Trading Range
 
 ```{r}
-btc <- as.data.frame(`BTC-CAD`)
-btc$date <- row.names(btc)
+rec <- '2021-01-01/'
+btc_rec <- BTC_CAD[rec]
+dygraph(btc_rec[,"BTC-CAD.Close"])
 ```
+
+### Add Days of Week
+
+* Add weekdays to identify and compare prices by day of week.
+* Add date of each week to identify and compare weeks.
+
+Easiest - for me, at least - to convert time series to data frame:
+
+```{r, echo=TRUE}
+# btc_rec_df <- data.frame(btc_rec)
+# btc_rec_df$date <- index(btc_rec)
+# ## add days
+# btc_rec_df$day <- weekdays(index(btc_rec), abbreviate = TRUE)
+# ## - set days to factors
+# btc_rec_df$day <- factor(btc_rec_df$day)
+# #btc_rec_df$day <- fct_relevel(btc_rec_df$day, levels=c("Sun","Mon","Tue","Wed","Thu","Fri","Sat"))
+# ## add weeks
+# btc_rec_df$week_of <- floor_date(btc_rec_df$date, unit='weeks')
+```
+
+View the structure of the data with additional components added:
 
 ```{r}
-btc %>% filter(date>'2022-03-01') %>% ggplot(aes(x=date, y=`BTC-CAD.Close`))+geom_line(group=1)
-btc %>% filter(date>'2022-03-01') %>% ggplot(aes(x=date, y=`BTC-CAD.High`))+geom_col()
+## view structure
+#str(btc_rec_df)
 ```
 
+### Comparative views
+
+Take a look at daily comparisons for this period:
+
+```{r}
+# btc_rec_df %>% ggplot(aes(x=day, y=BTC.CAD.Close))+geom_boxplot(fill=fill_color)+
+#   scale_y_continuous(labels=dollar_format())+
+#   labs(title="Distribution of BTC-CAD Closing Price by Day of Week", y='BTC-CAD Close', x="")
+```
+
+No strong, obvious pattern over the period. Slight pattern of lower mid-week, rising to weekends. 
+
+This data is over a period where there is a lot of variance in the price that may blur the daily patterns. Could still be that there is a consistent pattern *within* weeks.
+
+For more granularity, let's look at week-by-week trends by day: 
+
+```{r}
+# week_plot <- btc_rec_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(week_of), group=week_of))+geom_line()+
+#   scale_y_continuous(labels=dollar_format())+
+#   labs(title="BTC-CAD Closing Price by Day by Week",x="",y="BTC-CAD Close")+
+#   theme(legend.position = 'none')
+# ggplotly(week_plot)
+```
+
+Certainly some weeks with upward trend through the week (most obviously near end of 2021), but not exactly a consistent pattern to rely on across this date range. 
+
+Look at some individual day of week comparisons
+
+* Start with Wed - Sat
+
+```{r}
+# btc_rec_d_df <- btc_rec_df %>% filter(day=='Wed' | day=='Sat')
+# dd_plot <- btc_rec_d_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(week_of), group=week_of))+geom_line()+
+#   scale_y_continuous(labels=dollar_format())+
+#   labs(title="BTC-CAD Closing Price by Day by Week",x="",y="BTC-CAD Close")+
+#   theme(legend.position = 'none')
+# ggplotly(dd_plot)
+```

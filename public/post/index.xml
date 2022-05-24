@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Catbird Analytics</title>
-    <link>http://www.catbird-analytics.com/post/</link>
+    <link>https://www.catbird-analytics.com/post/</link>
     <description>Recent content in Posts on Catbird Analytics</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://www.catbird-analytics.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.catbird-analytics.com/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>R Time Series Objects vs Data Frames: Advantages and Limitations</title>
-      <link>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</link>
+      <link>https://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</link>
       <pubDate>Sun, 30 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</guid>
+      <guid>https://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</guid>
       <description>Time Series Essentials Time Series Strengths Time Series Manipulation/Calculation Visualization Decomposition Plots Forecasting Conclusion Resources   As I learn more and more about R, questions often arise about which packages/methods/tools to use for a given situation. R is a vast - and growing - universe and I’m not interested in learning everything in that universe. I’m interested in learning the shortest paths between where I am now and my objective.</description>
     </item>
     
     <item>
       <title>Google Trends &#43; R: gtrendsR for Powerful Trend Analytics</title>
-      <link>http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</link>
+      <link>https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</link>
       <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</guid>
+      <guid>https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</guid>
       <description>Google Trends is a popular tool for all manner of curiousity related to trends in search activity on the Google search engine:
  what topics are trending? what are trends for a given search term? how does this compare to other terms? what related terms are people using? how does interest vary by region?  And lots more.
 Google Trends has recently passed its 15th birthday, prompting a Google blog post on “15 Tips for Getting the Most Out of Google Trends”.</description>

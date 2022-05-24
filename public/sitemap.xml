@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://www.catbird-analytics.com/</loc>
+    <loc>https://www.catbird-analytics.com/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/categories/</loc>
+    <loc>https://www.catbird-analytics.com/categories/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/dataviz/</loc>
+    <loc>https://www.catbird-analytics.com/tags/dataviz/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/post/</loc>
+    <loc>https://www.catbird-analytics.com/post/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/categories/r/</loc>
+    <loc>https://www.catbird-analytics.com/categories/r/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/r-markdown/</loc>
+    <loc>https://www.catbird-analytics.com/tags/r-markdown/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</loc>
+    <loc>https://www.catbird-analytics.com/post/r-time-series-vs-data-frames/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/</loc>
+    <loc>https://www.catbird-analytics.com/tags/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/time-series/</loc>
+    <loc>https://www.catbird-analytics.com/tags/time-series/</loc>
     <lastmod>2022-01-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/google-trends/</loc>
+    <loc>https://www.catbird-analytics.com/tags/google-trends/</loc>
     <lastmod>2022-01-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</loc>
+    <loc>https://www.catbird-analytics.com/post/google-trends-r-gtrends-for-power-analytics/</loc>
     <lastmod>2022-01-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/tags/gtrendsr/</loc>
+    <loc>https://www.catbird-analytics.com/tags/gtrendsr/</loc>
     <lastmod>2022-01-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/resources/</loc>
+    <loc>https://www.catbird-analytics.com/resources/</loc>
     <lastmod>2022-01-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://www.catbird-analytics.com/about/</loc>
+    <loc>https://www.catbird-analytics.com/about/</loc>
     <lastmod>2022-01-09T00:00:00+00:00</lastmod>
   </url>
 </urlset>

@@ -1,11 +1,11 @@
 ---
-title: Daily Patterns in Crypto Currency Prices
+title: Crypto Currency Prices - Are There Tradeable Daily Patterns?
 author: Package Build
 date: '2022-05-28'
 categories:
+  - analysis
   - crypto currency
   - R
-  - analysis
 tags:
   - bitcoin
   - crypto
@@ -47,13 +47,25 @@ theme_set(theme_classic())
 fill_color <- 'steelblue3'
 ```
 
+### Intro
+
+I've come across discussion on weekly patterns in Bitcoin in various circles, with the most common suggestion being that Bitcoin tends to be higher during the week than on weekends. Just because somebody says so, doesn't make it so today, even if it may have been true in the past. 
+
+So do any patterns really exist? And, more importantly: if they do exist, are there profitable trades to be made on a reliable basis?
+
+### tl;dr
+
+**No.** Not as far as I can tell, anyway.
+
+Read on for the details! Of course, there may be flaws in my analysis. Use at your own risk - this is merely for infotainment purposes and is not at all intended as any sort of financial or trading advice. :)
+
 ### Get Data
 
-* Due to long-term volatility and evolution of the market focus on recent years.
-* Go back roughly 2 years from today's date as starting point.
+* Focus on recent years, due to long-term volatility and evolution of the market focus.
 * Using BTC-CAD because...I'm Canadian.
 
-```{r data, echo=TRUE}
+```{r data, echo=TRUE, appendix=TRUE}
+## get data
 symb <- c('BTC-CAD')
 date_st <- '2020-05-01'
 ## using auto.assign = FALSE and setting object name to avoid issues with default 'BTC-CAD' name
@@ -62,7 +74,7 @@ BTC_CAD <- getSymbols(Symbols=symb, from=date_st, to=Sys.Date()-1, auto.assign =
 
 ### Initial Look at Data
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, appendix=TRUE}
 dygraph(BTC_CAD[,"BTC-CAD.Close"])
 ```
 
@@ -70,7 +82,7 @@ dygraph(BTC_CAD[,"BTC-CAD.Close"])
 
 ### Focus on Recent Trading Range
 
-```{r}
+```{r, appendix=TRUE}
 rec <- '2021-01-01/'
 btc_rec <- BTC_CAD[rec]
 dygraph(btc_rec[,"BTC-CAD.Close"])
@@ -84,7 +96,7 @@ dygraph(btc_rec[,"BTC-CAD.Close"])
 
 Easiest - for me, at least - to convert time series to data frame:
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, appendix=TRUE}
 btc_rec_df <- data.frame(btc_rec)
 btc_rec_df$date <- index(btc_rec)
 ## add days
@@ -107,7 +119,7 @@ str(btc_rec_df)
 
 Take a look at daily comparisons for this period:
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, appendix=TRUE}
 btc_rec_df %>% ggplot(aes(x=day, y=BTC.CAD.Close))+geom_boxplot(fill=fill_color)+
   scale_y_continuous(labels=dollar_format())+
   labs(title="Distribution of BTC-CAD Closing Price by Day of Week", y='BTC-CAD Close', x="")
@@ -121,7 +133,7 @@ This data is over a period where there is a lot of variance in the price that ma
 
 For more granularity, let's look at week-by-week trends by day: 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, appendix=TRUE}
 week_plot <- btc_rec_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(week_of), group=week_of))+geom_line()+
   scale_y_continuous(labels=dollar_format())+
   scale_x_discrete(expand=c(0,0))+
@@ -136,9 +148,9 @@ Certainly some weeks with upward trend through the week (most obviously near end
 
 Look at some individual day of week comparisons
 
-* Start with Wed - Sat
+#### Fri - Sat
 
-```{r}
+```{r, echo=TRUE, appendix=TRUE}
 btc_rec_d_df <- btc_rec_df %>% filter(day=='Fri' | day=='Sat')
 dd_plot <- btc_rec_d_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(week_of), group=week_of))+geom_line()+
   scale_y_continuous(labels=dollar_format())+
@@ -154,7 +166,8 @@ Pretty hard to pick out any obvious/consistent pattern. Let's take a closer look
 * get summary stats on these changes.
 * look at distribution of % change to see if any consistency.
 
-```{r}
+```{r, echo=TRUE, appendix=TRUE}
+## Wed - Sat
 ## may need to remove first row if starts with the day later in the week
 #btc_rec_d_df <- btc_rec_d_df[-1,]
 
@@ -189,12 +202,13 @@ Basically a wash:
 * median of `r mwkchg` tells us there is 50% chance of being either above or below `r mwkchg` (very close to 0) return on the week, although farther outliers on the positive side.
 * Ave. return on the week *could* add up to something over time. (`r awkchg`).
 
-Compare to Sun to Tue:
+#### Sun - Tue 
 
-```{r}
+```{r, appendix=TRUE}
+## Sun - Tue
 btc_rec_d_df <- btc_rec_df %>% filter(day=='Sun' | day=='Tue')
 ## may need to remove last row, if ends on day earlier in the week
-btc_rec_d_df <- btc_rec_d_df[-nrow(btc_rec_d_df),]
+#btc_rec_d_df <- btc_rec_d_df[-nrow(btc_rec_d_df),]
 dd_plot <- btc_rec_d_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(week_of), group=week_of))+geom_line()+
   scale_y_continuous(labels=dollar_format())+
   scale_x_discrete(expand=c(0,0))+
@@ -203,7 +217,7 @@ dd_plot <- btc_rec_d_df %>% ggplot(aes(x=day, y=BTC.CAD.Close, color=as.factor(w
 ggplotly(dd_plot)
 ```
 
-```{r}
+```{r, appendix=TRUE}
 ## calc % chg Sun-Tue
 btc_rec_d_df <- btc_rec_d_df %>% mutate(
   wk_chg=BTC.CAD.Close/lag(BTC.CAD.Close)-1
@@ -227,3 +241,59 @@ btc_rec_d_df %>% ggplot(aes(x=wk_chg))+geom_histogram(fill=fill_color)+
   labs(title="Distribution of Weekly Returns from Sun to Tue")
 ```
 
+* median of `r mwkchg` tells us there is 50% chance of being either above or below `r mwkchg`.
+* Ave. return on the week *could* add up to something over time. (`r awkchg`).
+
+Appears slightly more promising than Fri - Sat, considering both median and avg returns are above 0. Theorectically, these returns could add up to mad stacks of cash over time.
+
+**Two potential (major) issues:**
+
+1. Transaction fees, spread, etc. will likely erase this small gains - at least at the level many of us operate.
+2. The gains may *not* be statistically significant enough to rely on.
+
+We can assume that issue #1 is a deal-breaker, but let's check issue #2 for fun.
+
+For this we can use **paired sample t-test**. This is used to compare 'before / after' situations within the same samples.
+
+1. Calculate difference for each sample.
+2. Check for normal distribution of differences - esp. if sample <30.
+3. Run t-test with paired = TRUE.
+
+#### Paired t-test
+
+* differences have already been calculated.
+* normality check: can be eye-balled in histogram above. For extra measure, check QQ plot and Shapiro-Wilk test. (Not really needed, since well over 30 samples, but what the heck)
+
+```{r, appendix=TRUE}
+## check normality
+qqnorm(btc_rec_d_df$wk_chg) ## qqplot
+qqline(btc_rec_d_df$wk_chg) ## shows line of perfect normal
+shapiro.test(btc_rec_d_df$wk_chg) ## Shapiro-Wilk test for normality
+```
+
+Looks reasonable! High p-value for Shapiro Wilk indicates NOT significantly different from normal.
+
+So now the question is...is there a reliable *difference*?
+
+```{r, , appendix=TRUE, fig.width=3, fig.height=2.5}
+## check boxplot
+btc_rec_d_df %>% ggplot(aes(x=day, y=BTC.CAD.Close))+geom_boxplot(fill=fill_color)
+```
+
+Boxplot doesn't look encouraging. Let's confirm with hypothesis test.
+
+* run paired t.test: 
+
+```{r, echo=TRUE, appendix=TRUE}
+t.test(data=btc_rec_d_df, BTC.CAD.Close ~ day, paired = TRUE)
+```
+
+Looks like we do not have statical significance at all. So if this info was to be used for investment advice - which it definitely is not - the advice would be: **do not try this at home**. ;(
+
+### APPENDX: Full end-to-end code for reference
+ 
+```{r show-code, ref.label=knitr::all_labels(appendix==TRUE), echo = TRUE, eval=FALSE}
+
+```
+ 
+ 

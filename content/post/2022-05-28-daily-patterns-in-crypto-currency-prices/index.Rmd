@@ -15,6 +15,7 @@ slug: daily-patterns-in-crypto-currency-prices
 draft: yes
 description: Analysis of recent Bitcoin price history to see if there are predictable
   patterns in prices based on day of week that can be leveraged for trading.
+thumbnail: img/btc-daily-thumb.png
 ---
 
 ```{r setup, include=FALSE}

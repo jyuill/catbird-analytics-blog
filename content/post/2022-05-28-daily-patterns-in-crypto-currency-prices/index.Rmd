@@ -12,7 +12,7 @@ tags:
   - dataviz
   - finance
 slug: daily-patterns-in-crypto-currency-prices
-draft: yes
+draft: no
 description: Analysis of recent Bitcoin price history to see if there are predictable
   patterns in prices based on day of week that can be leveraged for trading.
 thumbnail: img/btc-daily-thumb.png
@@ -56,7 +56,7 @@ So do any patterns really exist? And, more importantly: if they do exist, are th
 
 ### tl;dr
 
-**No.** Not as far as I can tell, anyway.
+Surprise...**no.** At least as far as I can tell. ;)
 
 Read on for the details! Of course, there may be flaws in my analysis. Use at your own risk - this is merely for infotainment purposes and is not at all intended as any sort of financial or trading advice. :)
 

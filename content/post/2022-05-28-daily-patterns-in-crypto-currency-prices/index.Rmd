@@ -62,7 +62,8 @@ Read on for the details! Of course, there may be flaws in my analysis. Use at yo
 ### Get Data
 
 * Focus on recent years, due to long-term volatility and evolution of the market focus.
-* Using BTC-CAD because...I'm Canadian.
+* Looking at **Bitcoin** as the apex crypto currency. Other coins may have entirely different patterns.
+* Using **BTC-CAD** because...well, I'm Canadian.
 
 ```{r data, echo=TRUE, appendix=TRUE}
 ## get data

@@ -1,5 +1,5 @@
 ---
-title: Crypto Currency Prices - Are There Tradeable Daily Patterns?
+title: Crypto Currency (BTC) Prices - Are There Tradeable Daily Patterns?
 author: Package Build
 date: '2022-05-28'
 categories:
@@ -49,7 +49,7 @@ fill_color <- 'steelblue3'
 
 ### Intro
 
-I've come across discussion on weekly patterns in Bitcoin in various circles, with the most common suggestion being that Bitcoin tends to be higher during the week than on weekends. Just because somebody says so, doesn't make it so today, even if it may have been true in the past. 
+I've come across discussion on day-of-week patterns in Bitcoin in various circles, with the most common suggestion being that Bitcoin tends to be higher during the weekdays than on weekend days. Just because somebody says so, doesn't make it so today, even if it may have been true in the past. 
 
 So do any patterns really exist? And, more importantly: if they do exist, are there profitable trades to be made on a reliable basis?
 

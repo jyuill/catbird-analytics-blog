@@ -1,6 +1,6 @@
 ---
 title: Canadian Stock Market and Inflation
-author: Package Build
+author: JY
 date: '2022-02-27'
 slug: canadian-stock-market-and-inflation
 categories:
@@ -116,7 +116,7 @@ Probably need to look at longer time horizon to smooth out the volatility.
 * compare rolling 12-mth changes
 
 ```{r}
-infl_tse_wide <- infl_tse %>% select(-UOM)
+infl_tse_wide <- infl_tse %>% select(-UOM, -pc_chg)
 infl_tse_wide <- infl_tse_wide %>% pivot_wider(names_from=item, values_from=VALUE)
 
 ```

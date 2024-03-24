@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>finance on Catbird Analytics</title>
+    <link>https://www.catbird-analytics.com/tags/finance/</link>
+    <description>Recent content in finance on Catbird Analytics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 28 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.catbird-analytics.com/tags/finance/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Crypto Currency (BTC) Prices - Are There Tradeable Daily Patterns?</title>
+      <link>https://www.catbird-analytics.com/post/daily-patterns-in-crypto-currency-prices/</link>
+      <pubDate>Sat, 28 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.catbird-analytics.com/post/daily-patterns-in-crypto-currency-prices/</guid>
+      <description>Intro I’ve come across discussion on day-of-week patterns in Bitcoin in various circles, with the most common suggestion being that Bitcoin tends to be higher during the weekdays than on weekend days. Just because somebody says so, doesn’t make it so today, even if it may have been true in the past.
+So do any patterns really exist?</description>
+    </item>
+    
+  </channel>
+</rss>
